@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"dasai-hzm.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="项目背景在视频内容分析领域，我们常常需要从长视频中快速定位特定场景或画面。传统方法依赖于人工逐帧查看或基于元数据的简单搜索，效率低下且无法应对复杂语义查询。CLIP（Contrastive Language-Image Pretraining）模型的出现为这一领域带来了新的可能性，它能够理解图像与文本之间的语义关联。 笔者基于HuggingFace的CLIP模型开发了智能视频帧匹配系统，该系统可实">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于CLIP模型的智能视频帧匹配系统">
+<meta property="og:url" content="https://dasai-hzm.github.io/2025/02/09/CLIPBasedAudioProcessingSystem/index.html">
+<meta property="og:site_name" content="HzmSailor&#39;s Learning Blog">
+<meta property="og:description" content="项目背景在视频内容分析领域，我们常常需要从长视频中快速定位特定场景或画面。传统方法依赖于人工逐帧查看或基于元数据的简单搜索，效率低下且无法应对复杂语义查询。CLIP（Contrastive Language-Image Pretraining）模型的出现为这一领域带来了新的可能性，它能够理解图像与文本之间的语义关联。 笔者基于HuggingFace的CLIP模型开发了智能视频帧匹配系统，该系统可实">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://dasai-hzm.github.io/images/image-4.png">
+<meta property="og:image" content="https://dasai-hzm.github.io/images/image-5.png">
+<meta property="og:image" content="https://dasai-hzm.github.io/images/image-6.png">
+<meta property="og:image" content="https://dasai-hzm.github.io/images/image-7.png">
+<meta property="og:image" content="https://dasai-hzm.github.io/images/image-8.png">
+<meta property="article:published_time" content="2025-02-09T06:22:35.000Z">
+<meta property="article:modified_time" content="2025-02-09T05:44:41.943Z">
+<meta property="article:author" content="HzmSailor">
+<meta property="article:tag" content="多模态模型">
+<meta property="article:tag" content="计算机视觉">
+<meta property="article:tag" content="个人项目">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://dasai-hzm.github.io/images/image-4.png">
+
+<link rel="canonical" href="https://dasai-hzm.github.io/2025/02/09/CLIPBasedAudioProcessingSystem/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>基于CLIP模型的智能视频帧匹配系统 | HzmSailor's Learning Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HzmSailor's Learning Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">HzmSailor 的技术博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://dasai-hzm.github.io/2025/02/09/CLIPBasedAudioProcessingSystem/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="HzmSailor">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HzmSailor's Learning Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          基于CLIP模型的智能视频帧匹配系统
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-02-09 14:22:35 / 修改时间：13:44:41" itemprop="dateCreated datePublished" datetime="2025-02-09T14:22:35+08:00">2025-02-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h2><p>在视频内容分析领域，我们常常需要从长视频中快速定位特定场景或画面。传统方法依赖于人工逐帧查看或基于元数据的简单搜索，效率低下且无法应对复杂语义查询。CLIP（Contrastive Language-Image Pretraining）模型的出现为这一领域带来了新的可能性，它能够理解图像与文本之间的语义关联。</p>
+<p>笔者基于HuggingFace的CLIP模型开发了智能视频帧匹配系统，该系统可实现：</p>
+<ol>
+<li>自动解析视频文件（支持MP4&#x2F;AVI&#x2F;MOV等常见格式）</li>
+<li>实时计算文本描述与视频帧的语义相似度</li>
+<li>智能定位最佳匹配帧并支持可视化预览</li>
+<li>一键保存关键帧为JPG图片</li>
+</ol>
+<h2 id="开发思路"><a href="#开发思路" class="headerlink" title="开发思路"></a>开发思路</h2><h3 id="本地模型加载模块"><a href="#本地模型加载模块" class="headerlink" title="本地模型加载模块"></a>本地模型加载模块</h3><p>考虑到实际部署时的网络稳定性问题，系统采用本地化模型加载方案：</p>
+<ul>
+<li><strong>使用<code>transformers</code>库加载预训练的CLIP模型</strong>（clip-vit-base-patch32）</li>
+<li><strong>设置本地模型缓存路径</strong>（E:\clip），包含完整的模型文件：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LOCAL_MODEL_DIR = <span class="string">r&quot;E:\clip&quot;</span></span><br><span class="line">model = CLIPModel.from_pretrained(<span class="string">&quot;openai/clip-vit-base-patch32&quot;</span>).to(device)</span><br></pre></td></tr></table></figure></li>
+<li><strong>异常处理机制</strong>：模型加载失败时，提示缺失文件清单</li>
+</ul>
+<h3 id="多模态编码模块"><a href="#多模态编码模块" class="headerlink" title="多模态编码模块"></a>多模态编码模块</h3><h4 id="文本编码"><a href="#文本编码" class="headerlink" title="文本编码"></a><strong>文本编码</strong></h4><p>文本编码是将用户输入的英文描述转化为高维语义向量的过程。CLIP模型使用Transformer架构对文本进行编码，具体步骤如下：</p>
+<ul>
+<li><strong>文本预处理</strong>：将用户输入的英文描述（如 “a waitress standing in front of a restaurant”）进行分词和标准化处理。</li>
+<li><strong>Tokenization</strong>：将文本转换为模型可理解的Token序列，每个Token对应一个唯一的ID。</li>
+<li><strong>特征提取</strong>：通过多层Transformer编码器，将Token序列映射为固定长度的语义向量（本项目中维数为512）。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">inputs = processor(text=texts, return_tensors=<span class="string">&quot;pt&quot;</span>, padding=<span class="literal">True</span>).to(device)</span><br><span class="line">text_features = model.get_text_features(**inputs)</span><br></pre></td></tr></table></figure>
+
+<h4 id="图像编码"><a href="#图像编码" class="headerlink" title="图像编码"></a><strong>图像编码</strong></h4><p>图像编码是将视频帧转化为视觉特征向量的过程。CLIP模型使用Vision Transformer（ViT）架构对图像进行编码，具体步骤如下：</p>
+<ul>
+<li><strong>图像预处理</strong>：将视频帧从BGR格式转换为RGB格式，并调整大小为模型输入要求。</li>
+<li><strong>分块处理</strong>：将图像划分为多个小块（Patch），每个小块作为一个输入单元。</li>
+<li><strong>特征提取</strong>：通过多层Transformer编码器，将图像块序列映射为固定长度的视觉特征向量（本项目中维数为512）。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">inputs = processor(images=[pil_image], return_tensors=<span class="string">&quot;pt&quot;</span>, padding=<span class="literal">True</span>).to(device)</span><br><span class="line">image_features = model.get_image_features(**inputs)</span><br></pre></td></tr></table></figure>
+
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> CLIPModel, CLIPProcessor</span><br><span class="line"></span><br><span class="line">LOCAL_MODEL_DIR = <span class="built_in">input</span>(<span class="string">&quot;请输入你的CLIP模型路径：&quot;</span>)</span><br><span class="line"></span><br><span class="line">device = <span class="string">&quot;cuda&quot;</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">&quot;cpu&quot;</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Using device: <span class="subst">&#123;device&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    model = CLIPModel.from_pretrained(<span class="string">&quot;openai/clip-vit-base-patch32&quot;</span>).to(device)</span><br><span class="line">    processor = CLIPProcessor.from_pretrained(<span class="string">&quot;openai/clip-vit-base-patch32&quot;</span>)</span><br><span class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;加载模型失败，请检查本地文件是否完整: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(</span><br><span class="line">        <span class="string">&quot;必须包含以下文件: config.json, pytorch_model.bin, preprocessor_config.json, tokenizer_config.json, vocab.json, merges.txt&quot;</span>)</span><br><span class="line">    exit()</span><br><span class="line"></span><br><span class="line">video_path = <span class="built_in">input</span>(<span class="string">&quot;请输入你的视频文件路径：&quot;</span>)</span><br><span class="line">output_frame_path =<span class="built_in">input</span>(<span class="string">&quot;请输入你的最佳匹配帧保存路径：&quot;</span>)  </span><br><span class="line"></span><br><span class="line">user_text = <span class="built_in">input</span>(<span class="string">&quot;请输入一段英文描述（例如：a waitress standing in front of a restaurant）：&quot;</span>)</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> user_text.strip():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;输入不能为空！&quot;</span>)</span><br><span class="line">    exit()</span><br><span class="line"></span><br><span class="line">texts = [user_text]</span><br><span class="line"></span><br><span class="line">cap = cv2.VideoCapture(video_path)</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> cap.isOpened():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;无法打开视频文件: <span class="subst">&#123;video_path&#125;</span>&quot;</span>)</span><br><span class="line">    exit()</span><br><span class="line"></span><br><span class="line">best_match_score = -<span class="number">1</span></span><br><span class="line">best_match_frame = <span class="literal">None</span></span><br><span class="line">best_match_text = <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">frame_count = <span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    ret, frame = cap.read()</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> ret:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">    frame_count += <span class="number">1</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;Processing frame <span class="subst">&#123;frame_count&#125;</span>...&quot;</span>)</span><br><span class="line"></span><br><span class="line">    frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)</span><br><span class="line">    pil_image = Image.fromarray(frame_rgb)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        inputs = processor(</span><br><span class="line">            text=texts,</span><br><span class="line">            images=[pil_image],</span><br><span class="line">            return_tensors=<span class="string">&quot;pt&quot;</span>,</span><br><span class="line">            padding=<span class="literal">True</span></span><br><span class="line">        ).to(device)</span><br><span class="line">    <span class="keyword">except</span> RuntimeError <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;预处理失败: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            outputs = model(**inputs)</span><br><span class="line">        <span class="keyword">except</span> RuntimeError <span class="keyword">as</span> e:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;推理错误: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">    logits_per_image = outputs.logits_per_image.cuda().numpy()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(texts) == <span class="number">1</span>:</span><br><span class="line">        current_match_score = logits_per_image[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        probs = np.exp(logits_per_image) / np.<span class="built_in">sum</span>(np.exp(logits_per_image), axis=<span class="number">1</span>, keepdims=<span class="literal">True</span>)</span><br><span class="line">        current_match_score = probs[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    current_match_text = texts[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> current_match_score &gt; best_match_score:</span><br><span class="line">        best_match_score = current_match_score</span><br><span class="line">        best_match_frame = frame</span><br><span class="line">        best_match_text = current_match_text</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;更新最佳匹配: &#x27;<span class="subst">&#123;best_match_text&#125;</span>&#x27; (分数: <span class="subst">&#123;best_match_score:<span class="number">.4</span>f&#125;</span>)&quot;</span>)</span><br><span class="line"></span><br><span class="line">cap.release()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> best_match_frame <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;\n最佳匹配描述: &#x27;<span class="subst">&#123;best_match_text&#125;</span>&#x27; (分数: <span class="subst">&#123;best_match_score:<span class="number">.4</span>f&#125;</span>)&quot;</span>)</span><br><span class="line">    cv2.imshow(<span class="string">&quot;Best Matching Frame&quot;</span>, best_match_frame)</span><br><span class="line">    cv2.waitKey(<span class="number">0</span>)</span><br><span class="line">    cv2.destroyAllWindows()</span><br><span class="line"></span><br><span class="line">    save_frame = <span class="built_in">input</span>(<span class="string">&quot;是否保存最佳匹配帧？(y/n): &quot;</span>).strip().lower()</span><br><span class="line">    <span class="keyword">if</span> save_frame == <span class="string">&#x27;y&#x27;</span>:</span><br><span class="line">        cv2.imwrite(output_frame_path, best_match_frame)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;最佳匹配帧已保存到: <span class="subst">&#123;output_frame_path&#125;</span>&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;未找到匹配的帧。&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="使用说明"><a href="#使用说明" class="headerlink" title="使用说明"></a>使用说明</h2><p><strong>环境要求：</strong></p>
+<ul>
+<li>请安装Python 3.8+</li>
+<li>安装依赖库：<code>torch</code>, <code>transformers</code>,<code>opencv-python</code>,<code>pillow</code></li>
+</ul>
+<p><strong>准备步骤：</strong></p>
+<ul>
+<li>下载CLIP模型文件至本地目录</li>
+<li>准备一个您要处理的视频，并确保视频文件路径不包含中文</li>
+<li>准备一个保存最佳匹配帧的路径</li>
+</ul>
+<h2 id="输出结果示例"><a href="#输出结果示例" class="headerlink" title="输出结果示例"></a>输出结果示例</h2><p>笔者以本人所在学院的宣传片为例，其中有一段是游泳的片段，笔者尝试利用该程序找到游泳的片段。</p>
+<p>首先按照要求输入CLIP模型的地址、视频地址和导出图片的地址，然后系统开始运行。<br><img src="/images/image-4.png" alt="alt text"></p>
+<p>等到处理至游泳片段后，匹配分数不断刷新。<br><img src="/images/image-5.png" alt="alt text"></p>
+<p>程序运行完毕，最匹配的那一帧会自动弹出。<br><img src="/images/image-6.png" alt="alt text"><br><img src="/images/image-7.png" alt="alt text"></p>
+<p>键盘输入<code>y</code>之后，图片自动保存在设置的路径中。<br><img src="/images/image-8.png" alt="alt text"></p>
+<h2 id="技术优势"><a href="#技术优势" class="headerlink" title="技术优势"></a>技术优势</h2><ul>
+<li><strong>多模态对齐</strong>：CLIP模型通过对比学习实现了文本和图像在语义空间的对齐。</li>
+<li><strong>高效计算</strong>：利用GPU加速，实时处理视频帧并计算匹配分数。</li>
+<li><strong>语义理解</strong>：能够捕捉复杂的语义关系，而不仅仅是简单的关键词匹配。</li>
+</ul>
+<h2 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h2><p>本项目是笔者在学习了一点大模型技术后，利用不到半天时间开发的小型应用。这只是使用多模态大模型的一个小练习，且市场上已经有一些不错的产品实现了本项目的功能（如百度网盘自带的“云一朵”助理）。</p>
+<p>这篇文档会先在笔者的个人博客上发布，稍后会整理并发布在<a target="_blank" rel="noopener" href="https://github.com/Dasai-Hzm">我的Github</a>上，欢迎读者在Github社区提交issue讨论改进方案。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%A4%9A%E6%A8%A1%E6%80%81%E6%A8%A1%E5%9E%8B/" rel="tag"># 多模态模型</a>
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" rel="tag"># 计算机视觉</a>
+              <a href="/tags/%E4%B8%AA%E4%BA%BA%E9%A1%B9%E7%9B%AE/" rel="tag"># 个人项目</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/02/08/EssayReadingHelper/" rel="prev" title="一种基于大模型的自动化批量文献概要生成系统">
+      <i class="fa fa-chevron-left"></i> 一种基于大模型的自动化批量文献概要生成系统
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%A1%B9%E7%9B%AE%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">项目背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%BC%80%E5%8F%91%E6%80%9D%E8%B7%AF"><span class="nav-number">2.</span> <span class="nav-text">开发思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9C%AC%E5%9C%B0%E6%A8%A1%E5%9E%8B%E5%8A%A0%E8%BD%BD%E6%A8%A1%E5%9D%97"><span class="nav-number">2.1.</span> <span class="nav-text">本地模型加载模块</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%9A%E6%A8%A1%E6%80%81%E7%BC%96%E7%A0%81%E6%A8%A1%E5%9D%97"><span class="nav-number">2.2.</span> <span class="nav-text">多模态编码模块</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%87%E6%9C%AC%E7%BC%96%E7%A0%81"><span class="nav-number">2.2.1.</span> <span class="nav-text">文本编码</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9B%BE%E5%83%8F%E7%BC%96%E7%A0%81"><span class="nav-number">2.2.2.</span> <span class="nav-text">图像编码</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%BA%90%E7%A0%81"><span class="nav-number">3.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E"><span class="nav-number">4.</span> <span class="nav-text">使用说明</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%BE%93%E5%87%BA%E7%BB%93%E6%9E%9C%E7%A4%BA%E4%BE%8B"><span class="nav-number">5.</span> <span class="nav-text">输出结果示例</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E4%BC%98%E5%8A%BF"><span class="nav-number">6.</span> <span class="nav-text">技术优势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A4%87%E6%B3%A8"><span class="nav-number">7.</span> <span class="nav-text">备注</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="HzmSailor"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">HzmSailor</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-name">分类</span>
+      </div>
+      <div class="site-state-item site-state-tags">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span>
+      </div>
+  </nav>
+</div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HzmSailor</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
