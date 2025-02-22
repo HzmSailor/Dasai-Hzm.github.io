@@ -166,6 +166,208 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://dasai-hzm.github.io/2025/02/22/RL-1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="HzmSailor">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HzmSailor's Learning Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/22/RL-1/" class="post-title-link" itemprop="url">Reinforcement Learning-1: Basic Concepts</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-02-22 16:48:16 / 修改时间：16:49:10" itemprop="dateCreated datePublished" datetime="2025-02-22T16:48:16+08:00">2025-02-22</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="Basic-Concepts"><a href="#Basic-Concepts" class="headerlink" title="Basic Concepts"></a>Basic Concepts</h2><h3 id="A-grid-world-example"><a href="#A-grid-world-example" class="headerlink" title="A grid-world example"></a>A grid-world example</h3><ul>
+<li><p><strong>State: The status of the agent with respect to the environment.</strong></p>
+<ul>
+<li>在grid-world示例中，agent的位置就是state.</li>
+</ul>
+</li>
+<li><p><strong>State Space</strong>: 所有state构成的一个集合就是State Space.</p>
+</li>
+<li><p><strong>Action: For each state, there are some possible actions.</strong></p>
+<ul>
+<li>在grid-world示例中，agent每一步可采取的行动（如向上走、向下走）就是action.</li>
+</ul>
+</li>
+<li><p><strong>Action Space</strong>:所有action构成的一个集合就是Action Space.<br>Action Space与当前的state有关。</p>
+</li>
+<li><p><strong>State Transition</strong>: When taking an action, the agent may move from one state to another. Such a process is called <em>state transition</em>.<br>$$<br>s_1 \xrightarrow{a_2} s_2<br>$$</p>
+</li>
+<li><p>Tabular reprentation: 用表格的形式表达状态转移，但是只能表达deterministic cases。</p>
+</li>
+<li><p>State transition probability: 用条件概率才能表达stochastic cases.<br>$$<br>p(s_2 | s_1, a_2) &#x3D; 0.4 \<br>p(s_1 | s_1, a_2) &#x3D; 0.6<br>$$</p>
+</li>
+<li><p><strong>Policy: Policy tells the agent what actions to take at a state.</strong></p>
+<ul>
+<li>基于policy可以生成trajectory.</li>
+<li>仍然用条件概率表达stochastic policy.<br>$$<br>\pi(a_1 | s_1) &#x3D; 0.5<br>$$</li>
+<li>Tabular representation of a policy 既可以描述deterministic policy，也可以描述stochastic policy.</li>
+<li>编程时用随机数描述概率的问题。</li>
+</ul>
+</li>
+<li><p><strong>Reward: A real number we get after taking an action.</strong></p>
+<ul>
+<li>正的reward表示鼓励，负的reward表示惩罚。</li>
+<li>Reward可以理解为人机交互的一个接口。</li>
+<li>Tabular representation of a reward 只能描述deterministic reward.<br>$$<br>p(r &#x3D; -1 | s_1, a_1) &#x3D; 1<br>$$</li>
+<li>努力学习应该会获得奖励，但是奖励的多少是不一定的。</li>
+<li>鼓励行动，而非鼓励下一个状态。（注重过程而非结果）</li>
+</ul>
+</li>
+<li><p><strong>Trajectory: A trajectory is a state-action-reward chain.</strong><br>$$<br>s_1 \xrightarrow{a_2, r&#x3D;0} s_2 \xrightarrow{a_3, r&#x3D;0} s_5 \xrightarrow{a_3, r&#x3D;0} s_8 \xrightarrow{a_2, r&#x3D;1} s_9<br>$$</p>
+</li>
+<li><p>Return: 在一个trajectory中所有reward的和即为return.</p>
+<ul>
+<li>用于评估一个策略的好坏。</li>
+</ul>
+</li>
+<li><p>Discounted Return:<br>$$<br>\mathrm{Discounted\ Return} &#x3D; \Sigma \gamma^{i}r_i<br>$$</p>
+<ul>
+<li>$\gamma$ 被称为Discounted Rate, $\gamma$ 减少，可能会更加近视；$\gamma$ 增加，可能会较为远视。</li>
+</ul>
+</li>
+<li><p><strong>Episode: When interacting with the environment following a policy, the agent may stop at some <em>terminal states.</em> The resulting trajectory is called an episode(or a trial).</strong></p>
+<ul>
+<li>Episode is a finite trajectory.(有限的任务被称为episodic tasks，永远进行下去的任务是continuing tasks)</li>
+<li>有两种将episodic tasks转化为continuing tasks的办法：<ul>
+<li>第一种设置terminal state的action space只有留在原地，且奖励始终为0.</li>
+<li>第二种设置terminal state仍然是一个正常的state, 仍然有可能再离开terminal state, 再次进入时会获得正的奖励。</li>
+<li>第二种方法更加鼓励积极的探索，学习效果更好。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="Markov-Decision-Process-MDP"><a href="#Markov-Decision-Process-MDP" class="headerlink" title="Markov Decision Process (MDP)"></a>Markov Decision Process (MDP)</h3><h4 id="Key-Elements"><a href="#Key-Elements" class="headerlink" title="Key Elements"></a>Key Elements</h4><ul>
+<li>Sets:<ul>
+<li>Set of States: $\mathcal{S}$</li>
+<li>Set of Actions: $\mathcal{A}(s)$ is associated for state $s\in \mathcal{S}$.</li>
+<li>Set of Rewards: $\mathcal{R}(s,a)$</li>
+</ul>
+</li>
+<li>Probability Distribution:<ul>
+<li>State transition probability: $p(s’|s,a)$</li>
+<li>Reward Probability: $p(r |s,a)$</li>
+</ul>
+</li>
+<li>Policy: $\pi(a|s)$</li>
+<li><strong><em>Markov Property</em>: memoryless property</strong><br>$$<br>p(s_{t+1}|a_{t+1}, s_{t},\dots,a_1,s_0) &#x3D; p(s_{t+1}|a_{t+1}, s_{t}) \<br>p(r_{t+1}|a_{t+1}, s_{t},\dots,a_1,s_0) &#x3D; p(r_{t+1}|a_{t+1}, s_{t})<br>$$</li>
+</ul>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://dasai-hzm.github.io/2025/02/12/MultiAgent/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="HzmSailor">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HzmSailor's Learning Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/12/MultiAgent/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-02-12 09:28:12 / 修改时间：09:58:17" itemprop="dateCreated datePublished" datetime="2025-02-12T09:28:12+08:00">2025-02-12</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="多模态"><a href="#多模态" class="headerlink" title="多模态"></a>多模态</h1>
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://dasai-hzm.github.io/2025/02/09/CLIPBasedAudioProcessingSystem/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -549,7 +751,7 @@
       
           <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>欢迎您访问 HzmSailor 的个人博客！我是西安交通大学人工智能学院的本科生。</p>
 <p>博客用于整理人工智能本科专业学习笔记，AI方向论文摘要和个人日志等。（然而目前只有日志）</p>
-<p>欢迎邮件联系我！ E-mail: <a href="mailto:&#122;&#x69;&#x6d;&#x75;&#x68;&#x61;&#x6e;&#x32;&#x37;&#54;&#64;&#103;&#x6d;&#97;&#x69;&#x6c;&#46;&#x63;&#111;&#109;">&#122;&#x69;&#x6d;&#x75;&#x68;&#x61;&#x6e;&#x32;&#x37;&#54;&#64;&#103;&#x6d;&#97;&#x69;&#x6c;&#46;&#x63;&#111;&#109;</a></p>
+<p>欢迎邮件联系我！ E-mail: <a href="mailto:&#122;&#x69;&#x6d;&#x75;&#104;&#97;&#x6e;&#x32;&#55;&#54;&#x40;&#x67;&#109;&#97;&#x69;&#x6c;&#46;&#x63;&#x6f;&#x6d;">&#122;&#x69;&#x6d;&#x75;&#104;&#97;&#x6e;&#x32;&#55;&#54;&#x40;&#x67;&#109;&#97;&#x69;&#x6c;&#46;&#x63;&#x6f;&#x6d;</a></p>
 
       
     </div>
@@ -744,20 +946,20 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">7</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
           
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">7</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
