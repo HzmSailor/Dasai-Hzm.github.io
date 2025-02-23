@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Serif Simplified Chinese:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"dasai-hzm.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Reinforcement Learning - 2Motivating ExampleCalculating return is important to evaluate a policy. 因此，为了比较以下三个策略，利用Discounted Return，很容易分析得，第一个策略是最好的。对于第三个策略的Return，其实是一种期望。这可以作为理解Bellman Equation的一个引子">
+<meta property="og:type" content="article">
+<meta property="og:title" content="HzmSailor&#39;s Learning Blog">
+<meta property="og:url" content="https://dasai-hzm.github.io/2025/02/23/RL-2/index.html">
+<meta property="og:site_name" content="HzmSailor&#39;s Learning Blog">
+<meta property="og:description" content="Reinforcement Learning - 2Motivating ExampleCalculating return is important to evaluate a policy. 因此，为了比较以下三个策略，利用Discounted Return，很容易分析得，第一个策略是最好的。对于第三个策略的Return，其实是一种期望。这可以作为理解Bellman Equation的一个引子">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://dasai-hzm.github.io/images/image-16.png">
+<meta property="og:image" content="https://dasai-hzm.github.io/images/image-15.png">
+<meta property="article:published_time" content="2025-02-23T03:56:10.481Z">
+<meta property="article:modified_time" content="2025-02-23T03:55:43.511Z">
+<meta property="article:author" content="HzmSailor">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://dasai-hzm.github.io/images/image-16.png">
+
+<link rel="canonical" href="https://dasai-hzm.github.io/2025/02/23/RL-2/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title> | HzmSailor's Learning Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HzmSailor's Learning Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">HzmSailor 的技术博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://dasai-hzm.github.io/2025/02/23/RL-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="HzmSailor">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HzmSailor's Learning Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-02-23 11:56:10 / 修改时间：11:55:43" itemprop="dateCreated datePublished" datetime="2025-02-23T11:56:10+08:00">2025-02-23</time>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="Reinforcement-Learning-2"><a href="#Reinforcement-Learning-2" class="headerlink" title="Reinforcement Learning - 2"></a>Reinforcement Learning - 2</h1><h2 id="Motivating-Example"><a href="#Motivating-Example" class="headerlink" title="Motivating Example"></a>Motivating Example</h2><p><strong>Calculating return is important to evaluate a policy.</strong> 因此，为了比较以下三个策略，利用Discounted Return，很容易分析得，第一个策略是最好的。<br><img src="/images/image-16.png" alt="alt text"><br>对于第三个策略的Return，其实是一种期望。这可以作为理解Bellman Equation的一个引子。</p>
+<h2 id="Bootstrapping"><a href="#Bootstrapping" class="headerlink" title="Bootstrapping"></a>Bootstrapping</h2><p>Bootstrapping是一种计算Discounted Return的办法。设置一个较为简单的循环policy作为演示：<br><img src="/images/image-15.png" alt="alt text"><br>根据Discounted Return的定义，可以列出：</p>
+<script type="math/tex; mode=display">
+v_1 = r_1 + \gamma r_2 + \gamma^2 r_3 + \dots \\
+v_2 = r_2 + \gamma r_3 + \gamma^2 r_4 + \dots \\
+v_3 = r_3 + \gamma r_4 + \gamma^2 r_1 + \dots \\
+v_4 = r_4 + \gamma r_1 + \gamma^2 r_2 + \dots \\</script><p>仔细观察之后，可以发现有一种整体替代的办法，把无穷项化为有限项：</p>
+<script type="math/tex; mode=display">
+v_1 = r_1 + \gamma v_2 \\
+v_2 = r_2 + \gamma v_3 \\
+v_3 = r_3 + \gamma v_4 \\
+v_4 = r_4 + \gamma v_1 \\</script><p>这种办法可以用矩阵表达，如下：</p>
+<script type="math/tex; mode=display">
+\begin{pmatrix}
+v_1 \\
+v_2 \\
+v_3 \\
+v_4 \\
+\end{pmatrix}
+=\begin{pmatrix}
+r_1 \\
+r_2 \\
+r_3 \\
+r_4 \\
+\end{pmatrix}+\gamma
+\begin{pmatrix}
+0 & 1 & 0 & 0 \\
+0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 1 \\
+1 & 0 & 0 & 0 \\
+\end{pmatrix}
+\begin{pmatrix}
+v_1 \\
+v_2 \\
+v_3 \\
+v_4 \\
+\end{pmatrix}</script><p>也可以写作：</p>
+<script type="math/tex; mode=display">
+\textbf{v} = \textbf{r} + \gamma \textbf{Pv}</script><p>这其实就是对于deterministic cases的Bellman Equation，它的解为：</p>
+<script type="math/tex; mode=display">
+\textbf{v} = (\textbf{I} - \gamma \textbf{P})^{-1}\textbf{r}</script><p><strong>这种整体替代的办法就是Bootstrapping，其核心就是每一个state的Discounted Return依赖于其他state的Discounted Return。</strong></p>
+<h2 id="State-Value"><a href="#State-Value" class="headerlink" title="State Value"></a>State Value</h2><p>这一小节当中，我们要从deterministic cases过渡到stochastic cases中去，对于这两种情况，强化学习的各种概念的含义是保持一致的，只是每一个定量都变为了随机变量。而相应的，Discounted Return的概念要过渡到State Value，这是强化学习最核心的概念之一。</p>
+<h3 id="Notations"><a href="#Notations" class="headerlink" title="Notations"></a>Notations</h3><p>把RL中的定量重新定义成随机变量，考虑MDP中的一步：</p>
+<script type="math/tex; mode=display">
+S_t \xrightarrow{A_t} R_{t+1}, S_{t+1}</script><ul>
+<li>$t$, $t+1$表示离散化的时间。</li>
+<li>$S_t$ 表示时间$t$时，agent的状态。</li>
+<li>$A_t$ 表示时间$t$时，agent的所采取的行动。</li>
+<li>$R_{t+1}$ 表示时间$t$时，agent的状态从$S_t$迁移至$S_{t+1}$所获得的奖励，有时也写作$R_{t}$.<br>注意，$S_t$, $A_t$, $R_{t+1}$均是随机变量。这一步演化过程受概率分布的控制。</li>
+<li>$ S_t \xrightarrow{} A_{t} $ is governed by $\pi(A_t = a | S_t = s)$</li>
+<li>$ S_t, A_{t} \xrightarrow{} R_{t+1} $ is governed by $p(R_{t+1} = r | S_t = s, A{t} = a)$</li>
+<li>$ S_t, A_{t} \xrightarrow{} S_{t+1} $ is governed by $p(S_{t+1} = s’ | S_t = s, A{t} = a)$</li>
+</ul>
+<p>这里有一个很有趣的问题，既然演化过程中所采取的行动、下一步的状态、所获得奖励都受概率分布的控制，那么我们为什么不统一地用$p(\dots | \dots)$表达，而对于策略专门用了$\pi$表示呢？笔者思考了一下，认为决定的所采取的行动的策略($\pi(A_t = a | S_t = s)$)从本质上不同于$p(R_{t+1} = r | S_t = s, A{t} = a)$, $p(S_{t+1} = s’ | S_t = s, A{t} = a)$. 后两者描述的是agent采取行动之后环境与agent的交互情况，这实际上是取决于环境本身（比如grid-world当中网格的构造，哪里是target area，哪里是forbidden area）以及人们基于训练目标所设定的激励政策。这些内容可能在一定程度上是固定的（比如一个trajectory中），虽然其分布有可能知道，也有可能不知道（后面会解释）。而策略$\pi$则完全由agent学习而得，在学习过程中应当是不断变化的，才能取得进步。</p>
+<h3 id="Definition-of-State-Value"><a href="#Definition-of-State-Value" class="headerlink" title="Definition of State Value"></a>Definition of State Value</h3><p>考虑一个trajectory:</p>
+<script type="math/tex; mode=display">
+S_t \xrightarrow{A_t} R_{t+1}, S_{t+1} \xrightarrow{A_{t+1}} R_{t+2}, S_{t+2} \xrightarrow{A_{t+2}} R_{t+3}, S_{t+3} \dots</script><p>Discounted Return 是：</p>
+<script type="math/tex; mode=display">
+G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \gamma^3 R_{t+4} + \dots</script><p>显然，$R_{i}$是一个随机变量，那么$G_t$也是一个随机变量。而它的期望就被定义为<strong>在状态$s$下，基于策略$\pi$的State Value</strong>: $v_{\pi}(s)$.</p>
+<script type="math/tex; mode=display">
+v_{\pi}(s) = \mathbb{E}[G_t | S_t = s]</script><ul>
+<li>State Value 是关于状态$s$的函数，评价了一个状态的价值。</li>
+<li>State Value 也是策略$\pi$的函数，它的评价是基于目前选择的这个策略的。状态给定的情况下，基于某一个策略得到的State Value更高，证明这个策略更好，follow这条策略更有可能得到更高的return.</li>
+<li>Discounted Return 和 State Value 的关系：对于 deterministic cases, Discounted Return 和 State Value 没有区别，而对于 stochastic cases, State Value 就是 Discounted Return 的期望。</li>
+</ul>
+<h2 id="Establishment-of-Bellman-Equation"><a href="#Establishment-of-Bellman-Equation" class="headerlink" title="Establishment of Bellman Equation"></a>Establishment of Bellman Equation</h2><p>由上一小节，Discounted Return 是：</p>
+<script type="math/tex; mode=display">
+G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \gamma^3 R_{t+4} + \dots</script><p>使用Bootstrapping方法，可得：</p>
+<script type="math/tex; mode=display">
+G_t = R_{t+1} + \gamma G_{t+1}</script><p>再结合State Value的定义，可得：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+v_{\pi}(s) & = \mathbb{E}[G_t | S_t = s] \\
+& = \mathbb{E}[R_{t+1} + \gamma G_{t+1} | S_t = s] \\
+& = \mathbb{E}[R_{t+1}  | S_t = s]  + \gamma \mathbb{E}[G_{t+1}| S_t = s]\\
+\end{align}</script><p>下面分别计算：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+\mathbb{E}[R_{t+1}  | S_t = s]  = \sum \limits_{a}^{} \pi(a | s) \sum \limits_{r} r \cdot p(r | s, a)
+\end{align}</script><script type="math/tex; mode=display">
+\begin{align}
+\mathbb{E}[G_{t+1}| S_t = s] & = \sum \limits_{s'} \mathbb{E}[G_{t+1}| S_t = s, S_{t+1} = s'] p(s'|s) \\
+& = \sum \limits_{s'} \mathbb{E}[G_{t+1}|  S_{t+1} = s'] p(s'|s) \\
+& = \sum \limits_{s'} v_{\pi}(s') p(s'|s) \\
+& = \sum \limits_{s'} v_{\pi}(s') \sum \limits_{a} p(s'|s, a) \pi(a|s) \\
+\end{align}</script><p>因此：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+v_{\pi}(s) & = \mathbb{E}[R_{t+1}  | S_t = s]  + \gamma \mathbb{E}[G_{t+1}| S_t = s]\\
+& = \sum \limits_{a}^{} \pi(a | s) \sum \limits_{r} r \cdot p(r | s, a) + \gamma \sum \limits_{a} \pi(a|s) \sum \limits_{s'} v_{\pi}(s')  p(s'|s, a)  \\
+& = \sum \limits_{a}^{} \pi(a | s) \left[\sum \limits_{r} r \cdot p(r | s, a) + \gamma  \sum \limits_{s'} v_{\pi}(s')  p(s'|s, a)\right]  \\
+\end{align}</script><p>这就得到了<strong>Bellman Equation</strong>。</p>
+<ul>
+<li><p>对于每一个状态均可以写出来一个Bellman Equation，因此，这一组方程不同状态的State Value之间的关系，即Bootstrapping方法。</p>
+</li>
+<li><p>Bellman Equation是基于策略$\pi(a|s)$的，因此，求解Bellman Equation又被称作policy evaluation.</p>
+</li>
+<li><p>$p(s’|s, a), p(r | s, a)$这两项指的是我们对于agent处于某一状态下，采取了某一行动之后，所获得奖励和所迁移到的下一状态的概率分布。我们对这个概率分布是否完全掌握，从本质上反映了我们对于与agent交互的环境是否有完全的了解(即Environment Model是否建立)。如果对所处的环境没有完全掌握，agent只能通过不断试验，观测所处的环境。<strong>从这一判断标准出发，强化学习可分为Model-Based RL和Model-Free RL.</strong></p>
+</li>
+</ul>
+<h2 id="Matrix-Vector-Form-of-the-Bellman-Equation"><a href="#Matrix-Vector-Form-of-the-Bellman-Equation" class="headerlink" title="Matrix-Vector Form of the Bellman Equation"></a>Matrix-Vector Form of the Bellman Equation</h2><h3 id="Rewrite-the-Bellman-Equation-in-Matrix-Vector-Form"><a href="#Rewrite-the-Bellman-Equation-in-Matrix-Vector-Form" class="headerlink" title="Rewrite the Bellman Equation in Matrix-Vector Form"></a>Rewrite the Bellman Equation in Matrix-Vector Form</h3><p>对Bellman Equation作如下代换：</p>
+<script type="math/tex; mode=display">
+\begin{align}
+r_{\pi}(s) = \sum \limits_{a} \pi(a|s) \sum \limits_{r} p(r|s,a) \cdot r \\
+p_{\pi}(s' | s) = \sum \limits_{a} \pi(a|s) p(s'|s,a)
+\end{align}</script><p>式中，$p_{\pi}(s’ | s)$是follow策略$\pi$下，从状态$s$迁移到$s’$的概率；$r_{\pi}(s)$是follow策略$\pi$下，状态$s$这一步得到奖励的期望。因此，可以将Bellman Equation写成：</p>
+<script type="math/tex; mode=display">
+v_{\pi}(s_i) = r_{\pi}(s_i) + \gamma \sum \limits_{s_j} p_{\pi}(s_j | s_i) v_{\pi}(s_j)</script><p>写成矩阵形式为：</p>
+<script type="math/tex; mode=display">
+\textbf{v}_{\pi} = \textbf{r}_{\pi} + \gamma \textbf{P}_{\pi}\textbf{v}_{\pi}</script><p>式中，$[\textbf{P}_{\pi}]_{ij} = p_{\pi}(s_j | s_i)$，被称为<strong>State Transition Matrix</strong>.</p>
+<h3 id="Solution-of-the-Bellman-Equation"><a href="#Solution-of-the-Bellman-Equation" class="headerlink" title="Solution of the Bellman Equation"></a>Solution of the Bellman Equation</h3><p>从数学上，Bellman Equation的解可写作：</p>
+<script type="math/tex; mode=display">
+\textbf{v}_{\pi} = (\textbf{I} - \gamma \textbf{P}_{\pi}) ^{-1} \textbf{r}_{\pi}</script><p>而实际上，由于$\textbf{v}_{\pi}$常常维数很高，上面的逆矩阵很难用计算机求解，我们常采用迭代的方法求解：</p>
+<script type="math/tex; mode=display">
+\textbf{v}_{k+1} = \textbf{r}_{\pi} + \gamma \textbf{P}_{\pi}\textbf{v}_{k}</script><p>从数学上，可以证明这种迭代的方法下，最终会收敛到Bellman Equation的解（证明略）。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/02/22/RL-1/" rel="prev" title="Reinforcement Learning-1: Basic Concepts">
+      <i class="fa fa-chevron-left"></i> Reinforcement Learning-1: Basic Concepts
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#Reinforcement-Learning-2"><span class="nav-number">1.</span> <span class="nav-text">Reinforcement Learning - 2</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Motivating-Example"><span class="nav-number">1.1.</span> <span class="nav-text">Motivating Example</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Bootstrapping"><span class="nav-number">1.2.</span> <span class="nav-text">Bootstrapping</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#State-Value"><span class="nav-number">1.3.</span> <span class="nav-text">State Value</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Notations"><span class="nav-number">1.3.1.</span> <span class="nav-text">Notations</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Definition-of-State-Value"><span class="nav-number">1.3.2.</span> <span class="nav-text">Definition of State Value</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Establishment-of-Bellman-Equation"><span class="nav-number">1.4.</span> <span class="nav-text">Establishment of Bellman Equation</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Matrix-Vector-Form-of-the-Bellman-Equation"><span class="nav-number">1.5.</span> <span class="nav-text">Matrix-Vector Form of the Bellman Equation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Rewrite-the-Bellman-Equation-in-Matrix-Vector-Form"><span class="nav-number">1.5.1.</span> <span class="nav-text">Rewrite the Bellman Equation in Matrix-Vector Form</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Solution-of-the-Bellman-Equation"><span class="nav-number">1.5.2.</span> <span class="nav-text">Solution of the Bellman Equation</span></a></li></ol></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="HzmSailor"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">HzmSailor</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Dasai-Hzm" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Dasai-Hzm" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zimuhan276@gmail.com" title="E-Mail → mailto:zimuhan276@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://xjtu-ai.github.io/" title="http:&#x2F;&#x2F;xjtu-ai.github.io" rel="noopener" target="_blank">XJTU-AI学组</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HzmSailor</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
