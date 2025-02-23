@@ -180,7 +180,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/02/23/RL-2/" class="post-title-link" itemprop="url">未命名</a>
+            <a href="/2025/02/23/RL-2/" class="post-title-link" itemprop="url">Reinforcement Learning-2: Bellman Equation</a>
         </h2>
 
         <div class="post-meta">
@@ -191,7 +191,16 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2025-02-23 11:56:10 / 修改时间：11:55:43" itemprop="dateCreated datePublished" datetime="2025-02-23T11:56:10+08:00">2025-02-23</time>
+              <time title="创建时间：2025-02-23 12:02:16 / 修改时间：12:02:47" itemprop="dateCreated datePublished" datetime="2025-02-23T12:02:16+08:00">2025-02-23</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+                </span>
             </span>
 
           
@@ -205,8 +214,10 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="Reinforcement-Learning-2"><a href="#Reinforcement-Learning-2" class="headerlink" title="Reinforcement Learning - 2"></a>Reinforcement Learning - 2</h1><h2 id="Motivating-Example"><a href="#Motivating-Example" class="headerlink" title="Motivating Example"></a>Motivating Example</h2><p><strong>Calculating return is important to evaluate a policy.</strong> 因此，为了比较以下三个策略，利用Discounted Return，很容易分析得，第一个策略是最好的。<br><img src="/images/image-16.png" alt="alt text"><br>对于第三个策略的Return，其实是一种期望。这可以作为理解Bellman Equation的一个引子。</p>
-<h2 id="Bootstrapping"><a href="#Bootstrapping" class="headerlink" title="Bootstrapping"></a>Bootstrapping</h2><p>Bootstrapping是一种计算Discounted Return的办法。设置一个较为简单的循环policy作为演示：<br><img src="/images/image-15.png" alt="alt text"><br>根据Discounted Return的定义，可以列出：</p>
+          <h1 id="Reinforcement-Learning-2"><a href="#Reinforcement-Learning-2" class="headerlink" title="Reinforcement Learning - 2"></a>Reinforcement Learning - 2</h1><h2 id="Motivating-Example"><a href="#Motivating-Example" class="headerlink" title="Motivating Example"></a>Motivating Example</h2><p><strong>Calculating return is important to evaluate a policy.</strong> 因此，为了比较以下三个策略，利用Discounted Return，很容易分析得，第一个策略是最好的。<br><img src="/images/image-16.png" alt="alt text"></p>
+<p>对于第三个策略的Return，其实是一种期望。这可以作为理解Bellman Equation的一个引子。</p>
+<h2 id="Bootstrapping"><a href="#Bootstrapping" class="headerlink" title="Bootstrapping"></a>Bootstrapping</h2><p>Bootstrapping是一种计算Discounted Return的办法。设置一个较为简单的循环policy作为演示：<br><img src="/images/image-15.png" alt="alt text"></p>
+<p>根据Discounted Return的定义，可以列出：</p>
 <script type="math/tex; mode=display">
 v_1 = r_1 + \gamma r_2 + \gamma^2 r_3 + \dots \\
 v_2 = r_2 + \gamma r_3 + \gamma^2 r_4 + \dots \\
