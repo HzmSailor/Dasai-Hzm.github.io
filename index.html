@@ -178,6 +178,70 @@ MathJax = {
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://dasai-hzm.github.io/2025/02/23/RL-2_tmp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="HzmSailor">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HzmSailor's Learning Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/23/RL-2_tmp/" class="post-title-link" itemprop="url">未命名</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-02-23 12:02:27" itemprop="dateCreated datePublished" datetime="2025-02-23T12:02:27+08:00">2025-02-23</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-02-25 12:12:51" itemprop="dateModified" datetime="2025-02-25T12:12:51+08:00">2025-02-25</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://dasai-hzm.github.io/2025/02/23/RL-2/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -209,7 +273,7 @@ MathJax = {
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-02-25 11:24:16" itemprop="dateModified" datetime="2025-02-25T11:24:16+08:00">2025-02-25</time>
+                <time title="修改时间：2025-02-25 12:12:51" itemprop="dateModified" datetime="2025-02-25T12:12:51+08:00">2025-02-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -235,46 +299,7 @@ MathJax = {
           <h1 id="Reinforcement-Learning-2"><a href="#Reinforcement-Learning-2" class="headerlink" title="Reinforcement Learning - 2"></a>Reinforcement Learning - 2</h1><h2 id="Motivating-Example"><a href="#Motivating-Example" class="headerlink" title="Motivating Example"></a>Motivating Example</h2><p><strong>Calculating return is important to evaluate a policy.</strong> 因此，为了比较以下三个策略，利用Discounted Return，很容易分析得，第一个策略是最好的。<br><img src="/images/image-16.png" alt="alt text"></p>
 <p>对于第三个策略的Return，其实是一种期望。这可以作为理解Bellman Equation的一个引子。</p>
 <h2 id="Bootstrapping"><a href="#Bootstrapping" class="headerlink" title="Bootstrapping"></a>Bootstrapping</h2><p>Bootstrapping是一种计算Discounted Return的办法。设置一个较为简单的循环policy作为演示：<br><img src="/images/image-15.png" alt="alt text"></p>
-<p>根据Discounted Return的定义，可以列出：</p>
-<script type="math/tex; mode=display">
-v_1 = r_1 + \gamma r_2 + \gamma^2 r_3 + \dots \\
-v_2 = r_2 + \gamma r_3 + \gamma^2 r_4 + \dots \\
-v_3 = r_3 + \gamma r_4 + \gamma^2 r_1 + \dots \\
-v_4 = r_4 + \gamma r_1 + \gamma^2 r_2 + \dots \\</script><p>仔细观察之后，可以发现有一种整体替代的办法，把无穷项化为有限项：</p>
-<script type="math/tex; mode=display">
-v_1 = r_1 + \gamma v_2 \\
-v_2 = r_2 + \gamma v_3 \\
-v_3 = r_3 + \gamma v_4 \\
-v_4 = r_4 + \gamma v_1 \\</script><p>这种办法可以用矩阵表达，如下：</p>
-<script type="math/tex; mode=display">
-\begin{pmatrix}
-v_1 \\
-v_2 \\
-v_3 \\
-v_4 \\
-\end{pmatrix}
-=\begin{pmatrix}
-r_1 \\
-r_2 \\
-r_3 \\
-r_4 \\
-\end{pmatrix}+\gamma
-\begin{pmatrix}
-0 & 1 & 0 & 0 \\
-0 & 0 & 1 & 0 \\
-0 & 0 & 0 & 1 \\
-1 & 0 & 0 & 0 \\
-\end{pmatrix}
-\begin{pmatrix}
-v_1 \\
-v_2 \\
-v_3 \\
-v_4 \\
-\end{pmatrix}</script><p>也可以写作：</p>
-<script type="math/tex; mode=display">
-\textbf{v} = \textbf{r} + \gamma \textbf{Pv}</script><p>这其实就是对于deterministic cases的Bellman Equation，它的解为：</p>
-<script type="math/tex; mode=display">
-\textbf{v} = (\textbf{I} - \gamma \textbf{P})^{-1}\textbf{r}</script><p><strong>这种整体替代的办法就是Bootstrapping，其核心就是每一个state的Discounted Return依赖于其他state的Discounted Return。</strong></p>
+<p>根据Discounted Return的定义，可以列出：<br>\[<br>v_1 = r_1 + \gamma r_2 + \gamma^2 r_3 + \dots \\<br>v_2 = r_2 + \gamma r_3 + \gamma^2 r_4 + \dots \\<br>v_3 = r_3 + \gamma r_4 + \gamma^2 r_1 + \dots \\<br>v_4 = r_4 + \gamma r_1 + \gamma^2 r_2 + \dots \\<br>\]<br>仔细观察之后，可以发现有一种整体替代的办法，把无穷项化为有限项：<br>\[<br>v_1 = r_1 + \gamma v_2 \\<br>v_2 = r_2 + \gamma v_3 \\<br>v_3 = r_3 + \gamma v_4 \\<br>v_4 = r_4 + \gamma v_1 \\<br>\]<br>这种办法可以用矩阵表达，如下：<br>\[<br>\begin{pmatrix}<br>v_1 \\<br>v_2 \\<br>v_3 \\<br>v_4 \\<br>\end{pmatrix}<br>=\begin{pmatrix}<br>r_1 \\<br>r_2 \\<br>r_3 \\<br>r_4 \\<br>\end{pmatrix}+\gamma<br>\begin{pmatrix}<br>0 &amp; 1 &amp; 0 &amp; 0 \\<br>0 &amp; 0 &amp; 1 &amp; 0 \\<br>0 &amp; 0 &amp; 0 &amp; 1 \\<br>1 &amp; 0 &amp; 0 &amp; 0 \\<br>\end{pmatrix}<br>\begin{pmatrix}<br>v_1 \\<br>v_2 \\<br>v_3 \\<br>v_4 \\<br>\end{pmatrix}<br>\]<br>也可以写作：<br>\[<br>\textbf{v} = \textbf{r} + \gamma \textbf{Pv}<br>\]<br>这其实就是对于deterministic cases的Bellman Equation，它的解为：<br>\[<br>\textbf{v} = (\textbf{I} - \gamma \textbf{P})^{-1}\textbf{r}<br>\]<br><strong>这种整体替代的办法就是Bootstrapping，其核心就是每一个state的Discounted Return依赖于其他state的Discounted Return。</strong></p>
 <h2 id="State-Value"><a href="#State-Value" class="headerlink" title="State Value"></a>State Value</h2><p>这一小节当中，我们要从deterministic cases过渡到stochastic cases中去，对于这两种情况，强化学习的各种概念的含义是保持一致的，只是每一个定量都变为了随机变量。而相应的，Discounted Return的概念要过渡到State Value，这是强化学习最核心的概念之一。</p>
 <h3 id="Notations"><a href="#Notations" class="headerlink" title="Notations"></a>Notations</h3><p>把RL中的定量重新定义成随机变量，考虑MDP中的一步：</p>
 <script type="math/tex; mode=display">
@@ -288,44 +313,13 @@ S_t \xrightarrow{A_t} R_{t+1}, S_{t+1}</script><ul>
 <li>$ S_t, A_{t} \xrightarrow{} S_{t+1} $ is governed by $p(S_{t+1} = s’ | S_t = s, A{t} = a)$</li>
 </ul>
 <p>这里有一个很有趣的问题，既然演化过程中所采取的行动、下一步的状态、所获得奖励都受概率分布的控制，那么我们为什么不统一地用$p(\dots | \dots)$表达，而对于策略专门用了$\pi$表示呢？笔者思考了一下，认为决定的所采取的行动的策略($\pi(A_t = a | S_t = s)$)从本质上不同于$p(R_{t+1} = r | S_t = s, A{t} = a)$, $p(S_{t+1} = s’ | S_t = s, A{t} = a)$. 后两者描述的是agent采取行动之后环境与agent的交互情况，这实际上是取决于环境本身（比如grid-world当中网格的构造，哪里是target area，哪里是forbidden area）以及人们基于训练目标所设定的激励政策。这些内容可能在一定程度上是固定的（比如一个trajectory中），虽然其分布有可能知道，也有可能不知道（后面会解释）。而策略$\pi$则完全由agent学习而得，在学习过程中应当是不断变化的，才能取得进步。</p>
-<h3 id="Definition-of-State-Value"><a href="#Definition-of-State-Value" class="headerlink" title="Definition of State Value"></a>Definition of State Value</h3><p>考虑一个trajectory:</p>
-<script type="math/tex; mode=display">
-S_t \xrightarrow{A_t} R_{t+1}, S_{t+1} \xrightarrow{A_{t+1}} R_{t+2}, S_{t+2} \xrightarrow{A_{t+2}} R_{t+3}, S_{t+3} \dots</script><p>Discounted Return 是：</p>
-<script type="math/tex; mode=display">
-G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \gamma^3 R_{t+4} + \dots</script><p>显然，$R_{i}$是一个随机变量，那么$G_t$也是一个随机变量。而它的期望就被定义为<strong>在状态$s$下，基于策略$\pi$的State Value</strong>: $v_{\pi}(s)$.</p>
-<script type="math/tex; mode=display">
-v_{\pi}(s) = \mathbb{E}[G_t | S_t = s]</script><ul>
+<h3 id="Definition-of-State-Value"><a href="#Definition-of-State-Value" class="headerlink" title="Definition of State Value"></a>Definition of State Value</h3><p>考虑一个trajectory:<br>\[<br>S_t \xrightarrow{A_t} R_{t+1}, S_{t+1} \xrightarrow{A_{t+1}} R_{t+2}, S_{t+2} \xrightarrow{A_{t+2}} R_{t+3}, S_{t+3} \dots<br>\]<br>Discounted Return 是：<br>\[<br>G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \gamma^3 R_{t+4} + \dots<br>\]<br>显然，$R_{i}$是一个随机变量，那么$G_t$也是一个随机变量。而它的期望就被定义为<strong>在状态$s$下，基于策略$\pi$的State Value</strong>: $v_{\pi}(s)$.<br>\[<br>v_{\pi}(s) = \mathbb{E}[G_t | S_t = s]<br>\]</p>
+<ul>
 <li>State Value 是关于状态$s$的函数，评价了一个状态的价值。</li>
 <li>State Value 也是策略$\pi$的函数，它的评价是基于目前选择的这个策略的。状态给定的情况下，基于某一个策略得到的State Value更高，证明这个策略更好，follow这条策略更有可能得到更高的return.</li>
 <li>Discounted Return 和 State Value 的关系：对于 deterministic cases, Discounted Return 和 State Value 没有区别，而对于 stochastic cases, State Value 就是 Discounted Return 的期望。</li>
 </ul>
-<h2 id="Establishment-of-Bellman-Equation"><a href="#Establishment-of-Bellman-Equation" class="headerlink" title="Establishment of Bellman Equation"></a>Establishment of Bellman Equation</h2><p>由上一小节，Discounted Return 是：</p>
-<script type="math/tex; mode=display">
-G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \gamma^3 R_{t+4} + \dots</script><p>使用Bootstrapping方法，可得：</p>
-<script type="math/tex; mode=display">
-G_t = R_{t+1} + \gamma G_{t+1}</script><p>再结合State Value的定义，可得：</p>
-<script type="math/tex; mode=display">
-\begin{align}
-v_{\pi}(s) & = \mathbb{E}[G_t | S_t = s] \\
-& = \mathbb{E}[R_{t+1} + \gamma G_{t+1} | S_t = s] \\
-& = \mathbb{E}[R_{t+1}  | S_t = s]  + \gamma \mathbb{E}[G_{t+1}| S_t = s]\\
-\end{align}</script><p>下面分别计算：</p>
-<script type="math/tex; mode=display">
-\begin{align}
-\mathbb{E}[R_{t+1}  | S_t = s]  = \sum \limits_{a}^{} \pi(a | s) \sum \limits_{r} r \cdot p(r | s, a)
-\end{align}</script><script type="math/tex; mode=display">
-\begin{align}
-\mathbb{E}[G_{t+1}| S_t = s] & = \sum \limits_{s'} \mathbb{E}[G_{t+1}| S_t = s, S_{t+1} = s'] p(s'|s) \\
-& = \sum \limits_{s'} \mathbb{E}[G_{t+1}|  S_{t+1} = s'] p(s'|s) \\
-& = \sum \limits_{s'} v_{\pi}(s') p(s'|s) \\
-& = \sum \limits_{s'} v_{\pi}(s') \sum \limits_{a} p(s'|s, a) \pi(a|s) \\
-\end{align}</script><p>因此：</p>
-<script type="math/tex; mode=display">
-\begin{align}
-v_{\pi}(s) & = \mathbb{E}[R_{t+1}  | S_t = s]  + \gamma \mathbb{E}[G_{t+1}| S_t = s]\\
-& = \sum \limits_{a}^{} \pi(a | s) \sum \limits_{r} r \cdot p(r | s, a) + \gamma \sum \limits_{a} \pi(a|s) \sum \limits_{s'} v_{\pi}(s')  p(s'|s, a)  \\
-& = \sum \limits_{a}^{} \pi(a | s) \left[\sum \limits_{r} r \cdot p(r | s, a) + \gamma  \sum \limits_{s'} v_{\pi}(s')  p(s'|s, a)\right]  \\
-\end{align}</script><p>这就得到了<strong>Bellman Equation</strong>。</p>
+<h2 id="Establishment-of-Bellman-Equation"><a href="#Establishment-of-Bellman-Equation" class="headerlink" title="Establishment of Bellman Equation"></a>Establishment of Bellman Equation</h2><p>由上一小节，Discounted Return 是：<br>\[<br>G_t = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \gamma^3 R_{t+4} + \dots<br>\]<br>使用Bootstrapping方法，可得：<br>\[<br>G_t = R_{t+1} + \gamma G_{t+1}<br>\]<br>再结合State Value的定义，可得：<br>\[<br>\begin{align}<br>v_{\pi}(s) &amp; = \mathbb{E}[G_t | S_t = s] \\<br>&amp; = \mathbb{E}[R_{t+1} + \gamma G_{t+1} | S_t = s] \\<br>&amp; = \mathbb{E}[R_{t+1}  | S_t = s]  + \gamma \mathbb{E}[G_{t+1}| S_t = s]\\<br>\end{align}<br>\]<br>下面分别计算：<br>\[<br>\begin{align}<br>\mathbb{E}[R_{t+1}  | S_t = s]  = \sum \limits_{a}^{} \pi(a | s) \sum \limits_{r} r \cdot p(r | s, a)<br>\end{align}<br>\]<br>\[<br>\begin{align}<br>\mathbb{E}[G_{t+1}| S_t = s] &amp; = \sum \limits_{s’} \mathbb{E}[G_{t+1}| S_t = s, S_{t+1} = s’] p(s’|s) \\<br>&amp; = \sum \limits_{s’} \mathbb{E}[G_{t+1}|  S_{t+1} = s’] p(s’|s) \\<br>&amp; = \sum \limits_{s’} v_{\pi}(s’) p(s’|s) \\<br>&amp; = \sum \limits_{s’} v_{\pi}(s’) \sum \limits_{a} p(s’|s, a) \pi(a|s) \\<br>\end{align}<br>\]<br>因此：<br>\[<br>\begin{align}<br>v_{\pi}(s) &amp; = \mathbb{E}[R_{t+1}  | S_t = s]  + \gamma \mathbb{E}[G_{t+1}| S_t = s]\\<br>&amp; = \sum \limits_{a}^{} \pi(a | s) \sum \limits_{r} r \cdot p(r | s, a) + \gamma \sum \limits_{a} \pi(a|s) \sum \limits_{s’} v_{\pi}(s’)  p(s’|s, a)  \\<br>&amp; = \sum \limits_{a}^{} \pi(a | s) \left[\sum \limits_{r} r \cdot p(r | s, a) + \gamma  \sum \limits_{s’} v_{\pi}(s’)  p(s’|s, a)\right]  \\<br>\end{align}<br>\]<br>这就得到了<strong>Bellman Equation</strong>。</p>
 <ul>
 <li><p>对于每一个状态均可以写出来一个Bellman Equation，因此，这一组方程不同状态的State Value之间的关系，即Bootstrapping方法。</p>
 </li>
@@ -334,21 +328,13 @@ v_{\pi}(s) & = \mathbb{E}[R_{t+1}  | S_t = s]  + \gamma \mathbb{E}[G_{t+1}| S_t 
 <li><p>$p(s’|s, a), p(r | s, a)$这两项指的是我们对于agent处于某一状态下，采取了某一行动之后，所获得奖励和所迁移到的下一状态的概率分布。我们对这个概率分布是否完全掌握，从本质上反映了我们对于与agent交互的环境是否有完全的了解(即Environment Model是否建立)。如果对所处的环境没有完全掌握，agent只能通过不断试验，观测所处的环境。<strong>从这一判断标准出发，强化学习可分为Model-Based RL和Model-Free RL.</strong></p>
 </li>
 </ul>
-<h2 id="Matrix-Vector-Form-of-the-Bellman-Equation"><a href="#Matrix-Vector-Form-of-the-Bellman-Equation" class="headerlink" title="Matrix-Vector Form of the Bellman Equation"></a>Matrix-Vector Form of the Bellman Equation</h2><h3 id="Rewrite-the-Bellman-Equation-in-Matrix-Vector-Form"><a href="#Rewrite-the-Bellman-Equation-in-Matrix-Vector-Form" class="headerlink" title="Rewrite the Bellman Equation in Matrix-Vector Form"></a>Rewrite the Bellman Equation in Matrix-Vector Form</h3><p>对Bellman Equation作如下代换：</p>
-<script type="math/tex; mode=display">
-\begin{align}
-r_{\pi}(s) = \sum \limits_{a} \pi(a|s) \sum \limits_{r} p(r|s,a) \cdot r \\
-p_{\pi}(s' | s) = \sum \limits_{a} \pi(a|s) p(s'|s,a)
-\end{align}</script><p>式中，$p_{\pi}(s’ | s)$是follow策略$\pi$下，从状态$s$迁移到$s’$的概率；$r_{\pi}(s)$是follow策略$\pi$下，状态$s$这一步得到奖励的期望。因此，可以将Bellman Equation写成：</p>
-<script type="math/tex; mode=display">
-v_{\pi}(s_i) = r_{\pi}(s_i) + \gamma \sum \limits_{s_j} p_{\pi}(s_j | s_i) v_{\pi}(s_j)</script><p>写成矩阵形式为：</p>
-<script type="math/tex; mode=display">
-\textbf{v}_{\pi} = \textbf{r}_{\pi} + \gamma \textbf{P}_{\pi}\textbf{v}_{\pi}</script><p>式中，$[\textbf{P}_{\pi}]_{ij} = p_{\pi}(s_j | s_i)$，被称为<strong>State Transition Matrix</strong>.</p>
-<h3 id="Solution-of-the-Bellman-Equation"><a href="#Solution-of-the-Bellman-Equation" class="headerlink" title="Solution of the Bellman Equation"></a>Solution of the Bellman Equation</h3><p>从数学上，Bellman Equation的解可写作：</p>
-<script type="math/tex; mode=display">
-\textbf{v}_{\pi} = (\textbf{I} - \gamma \textbf{P}_{\pi}) ^{-1} \textbf{r}_{\pi}</script><p>而实际上，由于$\textbf{v}_{\pi}$常常维数很高，上面的逆矩阵很难用计算机求解，我们常采用迭代的方法求解：</p>
-<script type="math/tex; mode=display">
-\textbf{v}_{k+1} = \textbf{r}_{\pi} + \gamma \textbf{P}_{\pi}\textbf{v}_{k}</script><p>从数学上，可以证明这种迭代的方法下，最终会收敛到Bellman Equation的解（证明略）。</p>
+<h2 id="Matrix-Vector-Form-of-the-Bellman-Equation"><a href="#Matrix-Vector-Form-of-the-Bellman-Equation" class="headerlink" title="Matrix-Vector Form of the Bellman Equation"></a>Matrix-Vector Form of the Bellman Equation</h2><h3 id="Rewrite-the-Bellman-Equation-in-Matrix-Vector-Form"><a href="#Rewrite-the-Bellman-Equation-in-Matrix-Vector-Form" class="headerlink" title="Rewrite the Bellman Equation in Matrix-Vector Form"></a>Rewrite the Bellman Equation in Matrix-Vector Form</h3><p>对Bellman Equation作如下代换：<br>\[<br>\begin{align}<br>r_{\pi}(s) = \sum \limits_{a} \pi(a|s) \sum \limits_{r} p(r|s,a) \cdot r \\<br>p_{\pi}(s’ | s) = \sum \limits_{a} \pi(a|s) p(s’|s,a)<br>\end{align}<br>\]</p>
+<p>式中，$p_{\pi}(s’ | s)$是follow策略$\pi$下，从状态$s$迁移到$s’$的概率；$r_{\pi}(s)$是follow策略$\pi$下，状态$s$这一步得到奖励的期望。因此，可以将Bellman Equation写成：<br>\[<br>v_{\pi}(s_i) = r_{\pi}(s_i) + \gamma \sum \limits_{s_j} p_{\pi}(s_j | s_i) v_{\pi}(s_j)<br>\]</p>
+<p>写成矩阵形式为：<br>\[<br>\textbf{v}_{\pi} = \textbf{r}_{\pi} + \gamma \textbf{P}_{\pi}\textbf{v}_{\pi}<br>\]</p>
+<p>式中，$[\textbf{P}_{\pi}]_{ij} = p_{\pi}(s_j | s_i)$，被称为<strong>State Transition Matrix</strong>.</p>
+<h3 id="Solution-of-the-Bellman-Equation"><a href="#Solution-of-the-Bellman-Equation" class="headerlink" title="Solution of the Bellman Equation"></a>Solution of the Bellman Equation</h3><p>从数学上，Bellman Equation的解可写作：<br>\[<br>\textbf{v}_{\pi} = (\textbf{I} - \gamma \textbf{P}_{\pi}) ^{-1} \textbf{r}_{\pi}<br>\]</p>
+<p>而实际上，由于$\textbf{v}_{\pi}$常常维数很高，上面的逆矩阵很难用计算机求解，我们常采用迭代的方法求解：<br>\[<br>\textbf{v}_{k+1} = \textbf{r}_{\pi} + \gamma \textbf{P}_{\pi}\textbf{v}_{k}<br>\]</p>
+<p>从数学上，可以证明这种迭代的方法下，最终会收敛到Bellman Equation的解（证明略）。</p>
 
       
     </div>
@@ -399,7 +385,7 @@ v_{\pi}(s_i) = r_{\pi}(s_i) + \gamma \sum \limits_{s_j} p_{\pi}(s_j | s_i) v_{\p
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-02-25 12:07:01" itemprop="dateModified" datetime="2025-02-25T12:07:01+08:00">2025-02-25</time>
+                <time title="修改时间：2025-02-25 12:09:53" itemprop="dateModified" datetime="2025-02-25T12:09:53+08:00">2025-02-25</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -433,18 +419,14 @@ v_{\pi}(s_i) = r_{\pi}(s_i) + \gamma \sum \limits_{s_j} p_{\pi}(s_j | s_i) v_{\p
 </ul>
 </li>
 <li><strong>Action Space</strong>:所有action构成的一个集合就是Action Space.<br>Action Space与当前的state有关。</li>
-<li><strong>State Transition</strong>: When taking an action, the agent may move from one state to another. Such a process is called <em>state transition</em>.<script type="math/tex; mode=display">
-s_1 \xrightarrow{a_2} s_2</script></li>
+<li><strong>State Transition</strong>: When taking an action, the agent may move from one state to another. Such a process is called <em>state transition</em>.<br>\[<br>s_1 \xrightarrow{a_2} s_2<br>\]</li>
 <li>Tabular reprentation: 用表格的形式表达状态转移，但是只能表达deterministic cases。</li>
-<li><p>State transition probability: 用条件概率才能表达stochastic cases.</p>
-<script type="math/tex; mode=display">
-p(s_2 | s_1, a_2) = 0.4 \\
-p(s_1 | s_1, a_2) = 0.6</script></li>
+<li><p>State transition probability: 用条件概率才能表达stochastic cases.<br>\[<br>p(s_2 | s_1, a_2) = 0.4 \\<br>p(s_1 | s_1, a_2) = 0.6<br>\]</p>
+</li>
 <li><p><strong>Policy: Policy tells the agent what actions to take at a state.</strong></p>
 <ul>
 <li>基于policy可以生成trajectory.</li>
-<li>仍然用条件概率表达stochastic policy.<script type="math/tex; mode=display">
-\pi(a_1 | s_1) = 0.5</script></li>
+<li>仍然用条件概率表达stochastic policy.<br>\[<br>\pi(a_1 | s_1) = 0.5<br>\]</li>
 <li>Tabular representation of a policy 既可以描述deterministic policy，也可以描述stochastic policy.</li>
 <li>编程时用随机数描述概率的问题。</li>
 </ul>
@@ -452,20 +434,17 @@ p(s_1 | s_1, a_2) = 0.6</script></li>
 <li><strong>Reward: A real number we get after taking an action.</strong><ul>
 <li>正的reward表示鼓励，负的reward表示惩罚。</li>
 <li>Reward可以理解为人机交互的一个接口。</li>
-<li>Tabular representation of a reward 只能描述deterministic reward.<script type="math/tex; mode=display">
-p(r = -1 | s_1, a_1) = 1</script></li>
+<li>Tabular representation of a reward 只能描述deterministic reward.<br>\[<br>p(r = -1 | s_1, a_1) = 1<br>\]</li>
 <li>努力学习应该会获得奖励，但是奖励的多少是不一定的。</li>
 <li>鼓励行动，而非鼓励下一个状态。（注重过程而非结果）</li>
 </ul>
 </li>
-<li><strong>Trajectory: A trajectory is a state-action-reward chain.</strong><script type="math/tex; mode=display">
-s_1 \xrightarrow{a_2, r=0} s_2 \xrightarrow{a_3, r=0} s_5 \xrightarrow{a_3, r=0} s_8 \xrightarrow{a_2, r=1} s_9</script></li>
+<li><strong>Trajectory: A trajectory is a state-action-reward chain.</strong><br>\[<br>s_1 \xrightarrow{a_2, r=0} s_2 \xrightarrow{a_3, r=0} s_5 \xrightarrow{a_3, r=0} s_8 \xrightarrow{a_2, r=1} s_9<br>\]</li>
 <li>Return: 在一个trajectory中所有reward的和即为return.<ul>
 <li>用于评估一个策略的好坏。</li>
 </ul>
 </li>
-<li>Discounted Return:<script type="math/tex; mode=display">
-\mathrm{Discounted\ Return} = \Sigma \gamma^{i}r_i</script><ul>
+<li>Discounted Return:<br>\[<br>\mathrm{Discounted\ Return} = \Sigma \gamma^{i}r_i<br>\]<ul>
 <li>$\gamma$ 被称为Discounted Rate, $\gamma$ 减少，可能会更加近视；$\gamma$ 增加，可能会较为远视。</li>
 </ul>
 </li>
@@ -1090,7 +1069,7 @@ s_1 \xrightarrow{a_2, r=0} s_2 \xrightarrow{a_3, r=0} s_5 \xrightarrow{a_3, r=0}
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
