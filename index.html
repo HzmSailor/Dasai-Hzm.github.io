@@ -316,7 +316,7 @@ MathJax = {
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2025-02-26 12:02:16 / 修改时间：16:34:40" itemprop="dateCreated datePublished" datetime="2025-02-26T12:02:16+08:00">2025-02-26</time>
+              <time title="创建时间：2025-02-26 12:02:16 / 修改时间：16:39:43" itemprop="dateCreated datePublished" datetime="2025-02-26T12:02:16+08:00">2025-02-26</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -349,11 +349,11 @@ MathJax = {
 <p>\[<br>\begin{align}<br>v_{\pi}(s)<br>&amp; = \max \limits_{\pi} \sum \limits_{a}^{} \pi(a | s) \left[\sum \limits_{r} r \cdot p(r | s, a) + \gamma  \sum \limits_{s’} v_{\pi}(s’)  p(s’|s, a)\right]  \\<br>&amp; = \max \limits_{\pi} \sum \limits_{a}^{} \pi(a | s) \cdot q(s, a)  \\<br>\end{align}<br>\]</p>
 <p>其实就是进行了一步优化，它表达的是在最优策略下的 State Value 之间的关系。这里面有两个未知量，一个是策略$\pi$，一个是 State Value, 现在要对这两个未知量<strong>同时优化</strong>。</p>
 <p>首先要解决的是如果已知 Action Value, 如何找到最合适的策略的问题，这就是一个简单的线性规划问题。这里我们以 3 种 Action 的情况为例。</p>
-<p>\[<br>\max\limits_{\pi(a_i | s)} \pi(a_1 | s)q(s, a_1) + \pi(a_2 | s)q(s, a_2) + \pi(a_3 | s)q(s, a_3) \\<br>\mathrm{s.t.} \ \pi(a_1 | s) + \pi(a_2 | s) + \pi(a_3 | s) = 1<br>\]</p>
+<p>\[<br>\begin{align}<br>\max\limits_{\pi(a_i | s)} \pi(a_1 | s)q(s, a_1) + \pi(a_2 | s)q(s, a_2) + \pi(a_3 | s)q(s, a_3) \\<br>\mathrm{s.t.} \ \pi(a_1 | s) + \pi(a_2 | s) + \pi(a_3 | s) = 1<br>\end{align}<br>\]</p>
 <p>如果 Action Value 给定，且已知：</p>
 <p>\[<br>q(s, a_1) \geq q(s, a_2) \geq q(s, a_3)<br>\]</p>
 <p>那么，显然最优解在 $\pi(a_1 | s) = 1$, $\pi(a_j | s) = 0 (j = 2,3) $ 处取到。因此我们把这种办法（其实是一种deterministic policy）称为 <strong>Greedy Policy</strong>. 即：</p>
-<p>\[<br>\begin{align}<br>\pi(a|s) = 1<br>\end{align}<br>\]</p>
+<p>\[<br>\begin{align}<br>\pi(a|s) = 1  \ \  (a = a^<em>)  \\<br>\pi(a|s) = 0  \ \  (a \neq a^</em>)  \\<br>\end{align}<br>\]</p>
 <p>式中，$a^*= \mathrm{arg} \max \limits_{a} q(s,a) $，那么 Bellman Optimal Equation 可以重新写作：</p>
 <p>\[<br>\begin{align}<br>v_{\pi}(s)<br>&amp; =  \max\limits_{a \in \mathcal{A}} q(s, a)  \\<br>&amp; =  q(s, a^*)  \\<br>\end{align}<br>\]</p>
 
