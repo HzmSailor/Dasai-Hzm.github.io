@@ -40,7 +40,7 @@ MathJax = {
 <meta property="og:description" content="Introduction本节介绍 Value Iteration, Policy Iteration 和 Truncated Policy Iteration. 这三种办法都是解决 Bellman Optimal Equation 的方法，而且都是在 Model-Based 的情况下的算法。 Value Iteration下面给出 Value Iteration 的基本流程：  给定 State">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-02-26T09:02:16.000Z">
-<meta property="article:modified_time" content="2025-02-26T08:44:42.634Z">
+<meta property="article:modified_time" content="2025-02-26T08:46:23.849Z">
 <meta property="article:author" content="HzmSailor">
 <meta property="article:tag" content="强化学习">
 <meta name="twitter:card" content="summary">
@@ -208,7 +208,7 @@ MathJax = {
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2025-02-26 17:02:16 / 修改时间：16:44:42" itemprop="dateCreated datePublished" datetime="2025-02-26T17:02:16+08:00">2025-02-26</time>
+              <time title="创建时间：2025-02-26 17:02:16 / 修改时间：16:46:23" itemprop="dateCreated datePublished" datetime="2025-02-26T17:02:16+08:00">2025-02-26</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -237,7 +237,7 @@ MathJax = {
 <li>给定 State Value 的初始值$v_c(s)$</li>
 <li><p>进入循环：</p>
 <ol>
-<li>Policy Update<br>基于上一轮更新的 State Value, 选定最优策略（贪心策略），即：<br>\[<br>\begin{align}<br>\pi_{k+1} = \mathrm{arg} \max\limits_{\pi}(r_{\pi} + \gamma P_{\pi} v_k) \\<br>\pi_{k+1}(a|s)  =   1, a = a_k^<em>(s) \\<br>\pi_{k+1}(a|s)  = 0, a \neq a_k^</em>(s) \\<br>\end{align}<br>\]<br>式中，$a_k^*(s) = \mathrm{arg} \max\limits_{a}q_k(a,s)$.</li>
+<li>Policy Update<br>基于上一轮更新的 State Value, 选定最优策略（贪心策略），即：<br>\[<br>\pi_{k+1} = \mathrm{arg} \max\limits_{\pi}(r_{\pi} + \gamma P_{\pi} v_k)<br>\]<br>\[<br>\pi_{k+1}(a|s)  =   1, a = a_k^<em>(s)<br>\]<br>\[<br>\pi_{k+1}(a|s)  = 0, a \neq a_k^</em>(s)<br>\]<br>式中，$a_k^*(s) = \mathrm{arg} \max\limits_{a}q_k(a,s)$.</li>
 <li><p>Value Update<br>在新的 Policy 基础上，更新 State Value，即：<br>\[<br>v_{k+1} = r_{\pi_{k+1}} + \gamma P_{\pi_{k+1}} v_{k}<br>\]</p>
 <p>  由于我们采用了贪心策略，因此，上式其实就是：<br>\[<br>v_{k+1} = \max \limits_{a} q(a,s)<br>\]</p>
 </li>
@@ -273,7 +273,7 @@ MathJax = {
 </li>
 <li>Check<br>检查是否满足 $||v_{\pi_k} - v_{\pi_{k-1}}|| &lt; \delta $, 其中 $\delta$ 是一个事先指定的很小的正数。<ol>
 <li>如果此条件满足，则退出循环。</li>
-<li>如果此条件不满足，则进行 Policy Improvement.<br>基于求解的 State Value 更新 Policy.<br>\[<br>\pi_{k+1} = \mathrm{arg} \max\limits_{\pi}(r_{\pi} + \gamma P_{\pi} v_{\pi_k})<br>\]<br>\[<br>\pi_{k+1}(a|s)  =   1 \ \ \ a = a_{\pi_k}^<em>(s)<br>\]<br>\[<br>\pi_{k+1}(a|s)  =   0 \ \ \ a \neq a_{\pi_k}^</em>(s)<br>\]</li>
+<li>如果此条件不满足，则进行 Policy Improvement.<br>基于求解的 State Value 更新 Policy.<br>\[<br>\pi_{k+1} = \mathrm{arg} \max\limits_{\pi}(r_{\pi} + \gamma P_{\pi} v_{\pi_k})<br>\]<br>\[<br>\pi_{k+1}(a|s)  =   1,  a = a_{\pi_k}^<em>(s)<br>\]<br>\[<br>\pi_{k+1}(a|s)  =   0,  a \neq a_{\pi_k}^</em>(s)<br>\]</li>
 </ol>
 </li>
 </ol>
