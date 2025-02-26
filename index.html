@@ -203,7 +203,7 @@ MathJax = {
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2025-02-26 17:02:16 / 修改时间：16:48:29" itemprop="dateCreated datePublished" datetime="2025-02-26T17:02:16+08:00">2025-02-26</time>
+              <time title="创建时间：2025-02-26 17:02:16 / 修改时间：16:51:19" itemprop="dateCreated datePublished" datetime="2025-02-26T17:02:16+08:00">2025-02-26</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -243,15 +243,12 @@ MathJax = {
 <h2 id="Policy-Iteration"><a href="#Policy-Iteration" class="headerlink" title="Policy Iteration"></a>Policy Iteration</h2><p>下面给出 Policy Iteration 的基本流程：</p>
 <ol>
 <li>给定 Policy 的初始值 $\pi_0$</li>
-<li><p>进入循环：</p>
-<ol>
+<li>进入循环：<ol>
 <li>Policy Evaluation<br>Policy Evaluation 基于上一轮更新的 Policy 解 Bellman Equation.<br>\[<br>v_{\pi_k} = r_{\pi_{k}} + \gamma P_{\pi_{k}} v_{\pi_k}<br>\]<br>一个有趣的问题：此处如何解 Bellman Equation? 方法就是在第2节中所展示的迭代方法，即：<br>\[<br>v_{\pi_k}^{(j+1)} = r_{\pi} + \gamma P_{\pi}v_{\pi_k}^{(j)}<br>\]<br>将这个迭代方法进行很多次，直至 $||v_{\pi_k}^{(j+1)} - v_{\pi_k}^{(j)}|| &lt; \epsilon $, $\epsilon$ 是一个事先指定的很小的正数。</li>
-<li><p>Check<br>检查是否满足 $||v_{\pi_k} - v_{\pi_{k-1}}|| &lt; \delta $, 其中 $\delta$ 是一个事先指定的很小的正数。</p>
-<ol>
+<li>Check<br>检查是否满足 $||v_{\pi_k} - v_{\pi_{k-1}}|| &lt; \delta $, 其中 $\delta$ 是一个事先指定的很小的正数。<ol>
 <li>如果此条件满足，则退出循环。</li>
-<li>如果此条件不满足，则进行 Policy Improvement.<br>基于求解的 State Value 更新 Policy.<br>\[<br>\begin{align}<br>\pi_{k+1} = \mathrm{arg} \max\limits_{\pi}(r_{\pi} + \gamma P_{\pi} v_{\pi_k}) \\<br>\pi_{k+1}(a|s)  =     1 \ \ \ a = a_{\pi_k}^<em>(s) \\<br>\pi_{k+1}(a|s)  =     0 \ \ \ a \neq a_{\pi_k}^</em>(s) \\</li>
+<li>如果此条件不满足，则进行 Policy Improvement.<br>基于求解的 State Value 更新 Policy.<br>\[<br>\begin{align}<br>\pi_{k+1} = \mathrm{arg} \max\limits_{\pi}(r_{\pi} + \gamma P_{\pi} v_{\pi_k}) \\<br>\pi_{k+1}(a|s)  =     1 \ \ \ a = a_{\pi_k}^*(s) \\<br>\pi_{k+1}(a|s)  =     0 \ \ \ a \neq a_{\pi_k}^*(s) \\<br>\end{align}<br>\]</li>
 </ol>
-<p>\end{align}<br>\]</p>
 </li>
 </ol>
 </li>
@@ -268,7 +265,7 @@ MathJax = {
 </li>
 <li>Check<br>检查是否满足 $||v_{\pi_k} - v_{\pi_{k-1}}|| &lt; \delta $, 其中 $\delta$ 是一个事先指定的很小的正数。<ol>
 <li>如果此条件满足，则退出循环。</li>
-<li>如果此条件不满足，则进行 Policy Improvement.<br>基于求解的 State Value 更新 Policy.<br>\[<br>\pi_{k+1} = \mathrm{arg} \max\limits_{\pi}(r_{\pi} + \gamma P_{\pi} v_{\pi_k})<br>\]<br>根据贪心策略：<br>\[<br>\pi_{k+1}(a|s)  =   1,  a = a_{\pi_k}^<em>(s)<br>\]<br>\[<br>\pi_{k+1}(a|s)  =   0,  a \neq a_{\pi_k}^</em>(s)<br>\]</li>
+<li>如果此条件不满足，则进行 Policy Improvement.<br>基于求解的 State Value 更新 Policy.<br>\[<br>\pi_{k+1} = \mathrm{arg} \max\limits_{\pi}(r_{\pi} + \gamma P_{\pi} v_{\pi_k})<br>\]<br>根据贪心策略：<br>\[<br>\pi_{k+1}(a|s)  =   1,  a = a_{\pi_k}^*(s)<br>\]<br>\[<br>\pi_{k+1}(a|s)  =   0,  a \neq a_{\pi_k}^*(s)<br>\]</li>
 </ol>
 </li>
 </ol>
