@@ -32,20 +32,20 @@ MathJax = {
     var CONFIG = {"hostname":"dasai-hzm.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="期末成绩陆陆续续出来得差不多了，我也终于找到时间浅浅总结一下这学期的收获了。  刚从高中模式中逃脱出来的人大概是逃不开高中的思维，身边有不少紧紧盯着成绩的朋友（当然我也算是，毕竟是第一次大学的考试，陋习难改）。若是但从分数上看，除了线性代数寄的很惨之外，其他倒也能接受。充满智慧的教务老师们，为了“降低压力和内卷”，把成绩分布和排位功能给取消了，我也尚不清楚我这均分是个什么水平。  只不过，若但从期">
+  <meta name="description" content="Introduction本节介绍 Value Iteration, Policy Iteration 和 Truncated Policy Iteration. 这三种办法都是解决 Bellman Optimal Equation 的方法，而且都是在 Model-Based 的情况下的算法。 Value Iteration下面给出 Value Iteration 的基本流程：  给定 State">
 <meta property="og:type" content="article">
-<meta property="og:title" content="大一上学期总结">
-<meta property="og:url" content="https://dasai-hzm.github.io/2025/01/19/summary-2024-1/index.html">
+<meta property="og:title" content="Reinforcement Learning-4: Value Iteration and Policy Iteration">
+<meta property="og:url" content="https://dasai-hzm.github.io/2025/02/26/RL-4/index.html">
 <meta property="og:site_name" content="HzmSailor&#39;s Learning Blog">
-<meta property="og:description" content="期末成绩陆陆续续出来得差不多了，我也终于找到时间浅浅总结一下这学期的收获了。  刚从高中模式中逃脱出来的人大概是逃不开高中的思维，身边有不少紧紧盯着成绩的朋友（当然我也算是，毕竟是第一次大学的考试，陋习难改）。若是但从分数上看，除了线性代数寄的很惨之外，其他倒也能接受。充满智慧的教务老师们，为了“降低压力和内卷”，把成绩分布和排位功能给取消了，我也尚不清楚我这均分是个什么水平。  只不过，若但从期">
+<meta property="og:description" content="Introduction本节介绍 Value Iteration, Policy Iteration 和 Truncated Policy Iteration. 这三种办法都是解决 Bellman Optimal Equation 的方法，而且都是在 Model-Based 的情况下的算法。 Value Iteration下面给出 Value Iteration 的基本流程：  给定 State">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-01-19T14:36:16.000Z">
-<meta property="article:modified_time" content="2025-01-19T15:30:02.688Z">
+<meta property="article:published_time" content="2025-02-26T04:02:16.000Z">
+<meta property="article:modified_time" content="2025-02-26T08:14:19.398Z">
 <meta property="article:author" content="HzmSailor">
-<meta property="article:tag" content="学期总结">
+<meta property="article:tag" content="强化学习">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://dasai-hzm.github.io/2025/01/19/summary-2024-1/">
+<link rel="canonical" href="https://dasai-hzm.github.io/2025/02/26/RL-4/">
 
 
 <script id="page-configurations">
@@ -58,7 +58,7 @@ MathJax = {
   };
 </script>
 
-  <title>大一上学期总结 | HzmSailor's Learning Blog</title>
+  <title>Reinforcement Learning-4: Value Iteration and Policy Iteration | HzmSailor's Learning Blog</title>
   
 
 
@@ -184,7 +184,7 @@ MathJax = {
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://dasai-hzm.github.io/2025/01/19/summary-2024-1/">
+    <link itemprop="mainEntityOfPage" href="https://dasai-hzm.github.io/2025/02/26/RL-4/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -197,7 +197,7 @@ MathJax = {
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          大一上学期总结
+          Reinforcement Learning-4: Value Iteration and Policy Iteration
         </h1>
 
         <div class="post-meta">
@@ -208,7 +208,7 @@ MathJax = {
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2025-01-19 22:36:16 / 修改时间：23:30:02" itemprop="dateCreated datePublished" datetime="2025-01-19T22:36:16+08:00">2025-01-19</time>
+              <time title="创建时间：2025-02-26 12:02:16 / 修改时间：16:14:19" itemprop="dateCreated datePublished" datetime="2025-02-26T12:02:16+08:00">2025-02-26</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -216,7 +216,7 @@ MathJax = {
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E6%97%A5%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">日记</span></a>
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
                 </span>
             </span>
 
@@ -231,43 +231,52 @@ MathJax = {
     <div class="post-body" itemprop="articleBody">
 
       
-        <p style="text-indent: 2em;">期末成绩陆陆续续出来得差不多了，我也终于找到时间浅浅总结一下这学期的收获了。</p>
-
-<p style="text-indent: 2em;">刚从高中模式中逃脱出来的人大概是逃不开高中的思维，身边有不少紧紧盯着成绩的朋友（当然我也算是，毕竟是第一次大学的考试，陋习难改）。若是但从分数上看，除了线性代数寄的很惨之外，其他倒也能接受。充满智慧的教务老师们，为了“降低压力和内卷”，把成绩分布和排位功能给取消了，我也尚不清楚我这均分是个什么水平。</p>
-
-<p style="text-indent: 2em;">只不过，若但从期末考试的卷子上看这一学期的收获，也未免过于肤浅了，毕竟如果要评论一下这学期的一些课：</p>
-<p style="text-indent: 2em;">（1）思政、国防、毛概，这三门是每门一天速通的。据此总结了经验：摆烂一学期，考前速通也能90+（当然更高我也不追求）。</p>
-<p style="text-indent: 2em;">（2）高数和线代的内容，大部分高中竞赛时期就已经掌握得很熟练了，而且XJTU考试题的难度相比华科实在是简单，再往上跟USTC、PKU、THU更没法比。</p>
-<p style="text-indent: 2em;">（3）婴语，主要是学术写作的内容，学到了很多学术写作的格式和规范，收获很多，也很喜欢楚老师。但其实一周一次两小时的婴语课，也提高不了多少真正的英语水平，考个四级就老实了。</p>
-<p style="text-indent: 2em;">（4）选修课更是水的一批，这学期选了一门生态学、一门材料学的课。感觉选这些“推荐的好课”确实是上课水、不点名、给分高，但是1门课就要白白浪费32个小时（毕竟上课写作业也没啥效率，如果不逃课，那课堂的时间确实很浪费）。上完之后有一种强烈的空虚感，应该再也不会选这种课了。</p>
-
-<p style="text-indent: 2em;">那这学期到底收获了什么呢？</p>
-
-<p style="text-indent: 2em;">第一，学会了编程，算是小白入门的第一课。编程从0学起，而且基本上是让GPT教我、帮我debug，靠着PTA上的作业题学会的。这让我深刻体会到了“大不了自学”的含义。作为高考选拔进入，曾经有自认为不错的物理竞赛背景的同学，我选择CS类的专业，本身并没有什么基础优势，编程都是现学的，算法更是一窍不通。这学期从科学上网、学会github、再到学习一部分pytorch、搭建个人博客，虽然水平远比不上少班的大佬们，但总算是学习了一点点技术，这应该是未来工作/研究中比较实用的部分。</p>
-
-<p style="text-indent: 2em;">第二，认识了很多新朋友，社交扩大了一些。很不幸，高中同学没有来XJTU的，以前认识的朋友进入XJTU的也不多，再加上我是后选拔进班，和其他同学军训和住宿都不在一起，social十分困难。我也得强行转变一下MBTI，变得E一些，主动加了不少朋友，也很有幸能认识到很多少班的大佬们。非常感谢大佬们不吝赐教，这学期给了我很多宝贵的指导和帮助。</p>
-
-<p style="text-indent: 2em;">第三，AI学组运行平稳起步，顺利走上正轨。当时本着想为同学们做些事情的想法，再加上自己时间比较宽裕，就接下了24级学组负责人的职位。我接下工作后才发现，学组各方面制度和架构其实很不完善，创立时间也不长。怎么把学组建设好、运营好，让学组中各位大佬团结起来、发挥聪明才智、创造集体价值，是摆在我面前的一个重要问题。从一开始准备见面会，分配工作，到后来一项一项推进工作，产出一份一份资料，学组的每一项工作都倾注着我们的付出，凝聚着所有人的努力，我也当然为此投入了大量的时间和精力。</p>
-
-<p style="text-indent: 2em;">第四，身体素质相比有了很大提高。荒废了半年多的长跑慢慢拾起，从一开始的两公里六分配，用两个月的时间一点一点提高到五公里四分半的水平。在无数个零下黑夜的田径场上，音乐、脚步和呼吸共同律动，我似乎又找回五年前那个1500米银牌的自己了。相比去年那个一周跑几趟医院的我，这学期去医院的次数明显少了很多（或许也是因为大部分问题都能自己诊断然后吃药解决）。然而不幸的是，期末周的来临，让我有半个多月找不到跑步的时间，连续一天一门速通的压力也让我身体扛不住了，期末考完一回家就直接急诊科输液去了。</p>
-
-<p style="text-indent: 2em;">看起来很棒，所以下学期有什么打算呢？</p>
-
-<p style="text-indent: 2em;">这个问题我想了很久，因为计划的制定是从最核心的价值观出发的。所以，这必须要回答这样的问题：我看重什么呢？这学期最后一次心理咨询的时候，老师抛给我一个这样的问题，她希望我寒假的时候好好思考一下。</p>
-
-<p style="text-indent: 2em;">我追求的是90分提高到95分，然后获得4.3的绩点的那种满足吗？还是门门课都要争取上90，最后拿奖学金？如果为了成绩/科研天天晚上学到1点以后睡觉，身体素质下降，这是我想要的吗？</p>
-
-<p style="text-indent: 2em;">首先，我想我来XJTU是为了学知识和技术的，上课的主要意义是学知识，成绩只是学习成果的一个反映，大概比保研线高一些，维持在安全能保研的水平就够了，我认为自己没有能力也没有心力去争前几名。既然上课的主要意义是学知识，那么我宁愿选一些上课水平高但是给分低的老师，或是内容我感兴趣/内容有价值但给分低的课，而不会去选那些给分高但是上完之后没什么收获的课。当然，一些必修课如果像后者一样，不如翘之，然后从网上找替代品学习。</p>
-
-<p style="text-indent: 2em;">至于奖学金，我倒认为争取的必要性不大，可以随缘处之，有机会就拿，拿不成就算了。如果为了这几千块钱牺牲掉一些更为重要的价值，那真是捡了芝麻丢了西瓜，没有抓住主要矛盾。</p>
-
-<p style="text-indent: 2em;">其次，身体素质上我希望能继续提升一些。跑半马和爬雪山是我一直以来的两个梦想，希望下个学期能至少实现一个。跑半马需要月跑量100km以上，至少训练半年，注重10km/15km这样的长距离跑步训练（这学期的5km训练是远远不够的）。爬雪山也需要半年以上的准备时间，长跑训练、负重爬楼训练、肌肉耐力训练都要加上，而且还需要一些训练营培训一些冰雪技巧（不过这倒不难，身体素质是最硬的一道关）。另外，规律的作息也是身体素质的一个保障。希望下个学期还能保证12点半以前入睡，然后8点左右起来的充足睡眠（听起来不像是上大学的，但我这个学期确实如此）。身体和事业是同等重要的，如果工作真的需要我熬夜处理，那我认为应该放弃一部分工作来保证睡眠。</p>
-
-<p style="text-indent: 2em;">还有科研的问题，身边有不少大一就进组的同学，但是盲从跟风并不是我想要的，我更希望的是能有机会投入到自己真正感兴趣的方向中去。毕竟有兴趣才会有动力，工作起来有激情就不会感到疲惫，若是单纯以论文成果为导向，恐怕我没法承受这种强度的枯燥工作。另外，目前自己的水平也十分有限，提高能力是根本，基础知识应该格外重视，不能急于进组科研，更不能急于追求成果。</p>
-
-<p style="text-indent: 2em;">最后，希望学组的工作能继续推进一些，希望能推动更多同学加入到资料编写、学业互助的工作中来，让学组创造更大的社会价值，也在学组的工作中不断积累经验，提高自己的专业能力、管理能力。</p>
-
-<p style="text-indent: 2em;">这学期的故事就到这里了，下个学期会更好，一定会。</p>
+        <h2 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h2><p>本节介绍 Value Iteration, Policy Iteration 和 Truncated Policy Iteration. 这三种办法都是解决 Bellman Optimal Equation 的方法，而且都是在 Model-Based 的情况下的算法。</p>
+<h2 id="Value-Iteration"><a href="#Value-Iteration" class="headerlink" title="Value Iteration"></a>Value Iteration</h2><p>下面给出 Value Iteration 的基本流程：</p>
+<ol>
+<li>给定 State Value 的初始值$v_c(s)$</li>
+<li><p>进入循环：</p>
+<ol>
+<li>Policy Update<br>基于上一轮更新的 State Value, 选定最优策略（贪心策略），即：<br>\[<br>\begin{align}<br>\pi_{k+1} = \mathrm{arg} \max\limits_{\pi}(r_{\pi} + \gamma P_{\pi} v_k) \\<br>\pi_{k+1}(a|s)  =\begin{cases}<br>1 \ \ \ a = a_k^<em>(s) \\<br>0 \ \ \ a \neq a_k^</em>(s) \\<br>\end{cases}<br>\end{align}<br>\]<br>式中，$a_k^*(s) = \mathrm{arg} \max\limits_{a}q_k(a,s)$.</li>
+<li><p>Value Update<br>在新的 Policy 基础上，更新 State Value，即：<br>\[<br>v_{k+1} = r_{\pi_{k+1}} + \gamma P_{\pi_{k+1}} v_{k}<br>\]</p>
+<p>  由于我们采用了贪心策略，因此，上式其实就是：<br>\[<br>v_{k+1} = \max \limits_{a} q(a,s)<br>\]</p>
+</li>
+<li>Check<br>检查是否满足 $||v_{k+1} - v_{k}|| &lt; \delta $, 其中 $\delta$ 是一个事先指定的很小的正数。如果满足，则退出循环，求解完毕。如果不满足，则继续循环。</li>
+</ol>
+</li>
+</ol>
+<h2 id="Policy-Iteration"><a href="#Policy-Iteration" class="headerlink" title="Policy Iteration"></a>Policy Iteration</h2><p>下面给出 Policy Iteration 的基本流程：</p>
+<ol>
+<li>给定 Policy 的初始值 $\pi_0$</li>
+<li>进入循环：<ol>
+<li>Policy Evaluation<br>Policy Evaluation 基于上一轮更新的 Policy 解 Bellman Equation.<br>\[<br>v_{\pi_k} = r_{\pi_{k}} + \gamma P_{\pi_{k}} v_{\pi_k}<br>\]<br>一个有趣的问题：此处如何解 Bellman Equation? 方法就是在第2节中所展示的迭代方法，即：<br>\[<br>v_{\pi_k}^{(j+1)} = r_{\pi} + \gamma P_{\pi}v_{\pi_k}^{(j)}<br>\]<br>将这个迭代方法进行很多次，直至 $||v_{\pi_k}^{(j+1)} - v_{\pi_k}^{(j)}|| &lt; \epsilon $, $\epsilon$ 是一个事先指定的很小的正数。</li>
+<li>Check<br>检查是否满足 $||v_{\pi_k} - v_{\pi_{k-1}}|| &lt; \delta $, 其中 $\delta$ 是一个事先指定的很小的正数。<ol>
+<li>如果此条件满足，则退出循环。</li>
+<li>如果此条件不满足，则进行 Policy Improvement.<br>基于求解的 State Value 更新 Policy.<br>\[<br>\begin{align}<br>\pi_{k+1} = \mathrm{arg} \max\limits_{\pi}(r_{\pi} + \gamma P_{\pi} v_{\pi_k}) \\<br>\pi_{k+1}(a|s)  =\begin{cases}<br>1 \ \ \ a = a_{\pi_k}^<em>(s) \\<br>0 \ \ \ a \neq a_{\pi_k}^</em>(s) \\<br>\end{cases}<br>\end{align}<br>\]</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="Truncated-Policy-Iteration"><a href="#Truncated-Policy-Iteration" class="headerlink" title="Truncated Policy Iteration"></a>Truncated Policy Iteration</h2><p>通过观察可以发现，Policy Iteration 和 Value Iteration 的区别在于，Value Iteration 每次更新 State Value 时，只根据 Bellman Equation 迭代了一次，而 Policy Iteration 从理论上迭代了无穷多次，求出了 Bellman Equation 的一个精确解。因此，我们可以设想有这样一种办法，<strong>它每次根据 Bellman Equation 迭代了有穷多次（不妨记为$j$次），这就是 Truncated Policy Iteration, 如同将 Policy Iteration 截断。</strong> Value Iteration 和 Policy Iteration 可以分别视为 Truncated Policy Iteration 的两个特殊情况。</p>
+<p>下面给出 Truncated Policy Iteration 的基本流程：</p>
+<ol>
+<li>给定 Policy 的初始值 $\pi_0$</li>
+<li>进入循环：<ol>
+<li>Policy Evaluation<br>Policy Evaluation 基于上一轮更新的 Policy 解 Bellman Equation.<br>\[<br>v_{\pi_k} = r_{\pi_{k}} + \gamma P_{\pi_{k}} v_{\pi_k}<br>\]<br>设定$j = 0$, 进入子循环，检查是否有$j \leq j_{max}$:<ol>
+<li>如果$j \leq j_{max}$, 则继续迭代：<br>\[<br>v_{\pi_k}^{(j+1)} = r_{\pi} + \gamma P_{\pi}v_{\pi_k}^{(j)}<br>\]<br>并且更新$j$值：$j = j+1$</li>
+<li>如果$j &gt; j_{max}$ 则退出子循环，最终：$v_{\pi_k}= v_{\pi_k}^{j_{max}} $.</li>
+</ol>
+</li>
+<li>Check<br>检查是否满足 $||v_{\pi_k} - v_{\pi_{k-1}}|| &lt; \delta $, 其中 $\delta$ 是一个事先指定的很小的正数。<ol>
+<li>如果此条件满足，则退出循环。</li>
+<li>如果此条件不满足，则进行 Policy Improvement.<br>基于求解的 State Value 更新 Policy.<br>\[<br>\begin{align}<br>\pi_{k+1} = \mathrm{arg} \max\limits_{\pi}(r_{\pi} + \gamma P_{\pi} v_{\pi_k}) \\<br>\pi_{k+1}(a|s)  =\begin{cases}<br>1 \ \ \ a = a_{\pi_k}^<em>(s) \\<br>0 \ \ \ a \neq a_{\pi_k}^</em>(s) \\<br>\end{cases}<br>\end{align}<br>\]</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<p>观察 Truncated Policy Iteration 的流程，我们可能有这样的疑问：State Value 的最大迭代次数 $j_{max}$ 到底取多少比较合适呢？</p>
 
     </div>
 
@@ -277,7 +286,7 @@ MathJax = {
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E5%AD%A6%E6%9C%9F%E6%80%BB%E7%BB%93/" rel="tag"># 学期总结</a>
+              <a href="/tags/%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0/" rel="tag"># 强化学习</a>
           </div>
 
         
@@ -286,12 +295,12 @@ MathJax = {
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2024/11/12/hello-world/" rel="prev" title="欢迎访问我的博客！">
-      <i class="fa fa-chevron-left"></i> 欢迎访问我的博客！
+    <a href="/2025/02/23/RL-2/" rel="prev" title="Reinforcement Learning-2: Bellman Equation">
+      <i class="fa fa-chevron-left"></i> Reinforcement Learning-2: Bellman Equation
     </a></div>
       <div class="post-nav-item">
-    <a href="/2025/02/08/EssayReadingHelper/" rel="next" title="一种基于大模型的自动化批量文献概要生成系统">
-      一种基于大模型的自动化批量文献概要生成系统 <i class="fa fa-chevron-right"></i>
+    <a href="/2025/02/26/RL-3/" rel="next" title="Reinforcement Learning-2: Bellman Optimal Equation">
+      Reinforcement Learning-2: Bellman Optimal Equation <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -351,6 +360,7 @@ MathJax = {
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Value-Iteration"><span class="nav-number">2.</span> <span class="nav-text">Value Iteration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Policy-Iteration"><span class="nav-number">3.</span> <span class="nav-text">Policy Iteration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Truncated-Policy-Iteration"><span class="nav-number">4.</span> <span class="nav-text">Truncated Policy Iteration</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -483,6 +493,61 @@ MathJax = {
   
 
   
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '[object Object]';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 
