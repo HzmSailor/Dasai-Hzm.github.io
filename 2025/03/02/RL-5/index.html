@@ -32,20 +32,22 @@ MathJax = {
     var CONFIG = {"hostname":"dasai-hzm.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Basic ConceptsA grid-world example State: The status of the agent with respect to the environment. 在grid-world示例中，agent的位置就是state.   State Space: 所有state构成的一个集合就是State Space. Action: For each state, t">
+  <meta name="description" content="Policy Learning and Value Learning深度学习的目标是找到最优的策略，通常有两种办法：策略学习和Q学习。Policy Learning 的优化对象就是策略函数 $\pi(a|s)$, 而 Value Learning 的优化对象是 $Q^*(s,a)$, 目标是找到最准确的 Optimal Action Value 函数，从而据此选择最合适的策略。 Deep Q Ne">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Reinforcement Learning-1: Basic Concepts">
-<meta property="og:url" content="https://dasai-hzm.github.io/2025/02/22/RL-1/index.html">
+<meta property="og:title" content="Reinforcement Learning-5: Deep Q Network, Temporal Difference and Q-Learning Algorithm">
+<meta property="og:url" content="https://dasai-hzm.github.io/2025/03/02/RL-5/index.html">
 <meta property="og:site_name" content="HzmSailor&#39;s Learning Blog">
-<meta property="og:description" content="Basic ConceptsA grid-world example State: The status of the agent with respect to the environment. 在grid-world示例中，agent的位置就是state.   State Space: 所有state构成的一个集合就是State Space. Action: For each state, t">
+<meta property="og:description" content="Policy Learning and Value Learning深度学习的目标是找到最优的策略，通常有两种办法：策略学习和Q学习。Policy Learning 的优化对象就是策略函数 $\pi(a|s)$, 而 Value Learning 的优化对象是 $Q^*(s,a)$, 目标是找到最准确的 Optimal Action Value 函数，从而据此选择最合适的策略。 Deep Q Ne">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-02-22T08:48:16.000Z">
-<meta property="article:modified_time" content="2025-02-25T04:22:28.366Z">
+<meta property="og:image" content="https://dasai-hzm.github.io/2025/03/02/RL-5/image-1.png">
+<meta property="article:published_time" content="2025-03-02T09:02:16.000Z">
+<meta property="article:modified_time" content="2025-03-02T03:37:30.869Z">
 <meta property="article:author" content="HzmSailor">
 <meta property="article:tag" content="强化学习">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://dasai-hzm.github.io/2025/03/02/RL-5/image-1.png">
 
-<link rel="canonical" href="https://dasai-hzm.github.io/2025/02/22/RL-1/">
+<link rel="canonical" href="https://dasai-hzm.github.io/2025/03/02/RL-5/">
 
 
 <script id="page-configurations">
@@ -58,7 +60,7 @@ MathJax = {
   };
 </script>
 
-  <title>Reinforcement Learning-1: Basic Concepts | HzmSailor's Learning Blog</title>
+  <title>Reinforcement Learning-5: Deep Q Network, Temporal Difference and Q-Learning Algorithm | HzmSailor's Learning Blog</title>
   
 
 
@@ -184,7 +186,7 @@ MathJax = {
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://dasai-hzm.github.io/2025/02/22/RL-1/">
+    <link itemprop="mainEntityOfPage" href="https://dasai-hzm.github.io/2025/03/02/RL-5/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -197,7 +199,7 @@ MathJax = {
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Reinforcement Learning-1: Basic Concepts
+          Reinforcement Learning-5: Deep Q Network, Temporal Difference and Q-Learning Algorithm
         </h1>
 
         <div class="post-meta">
@@ -206,16 +208,10 @@ MathJax = {
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2025-02-22 16:48:16" itemprop="dateCreated datePublished" datetime="2025-02-22T16:48:16+08:00">2025-02-22</time>
+              <time title="创建时间：2025-03-02 17:02:16 / 修改时间：11:37:30" itemprop="dateCreated datePublished" datetime="2025-03-02T17:02:16+08:00">2025-03-02</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-02-25 12:22:28" itemprop="dateModified" datetime="2025-02-25T12:22:28+08:00">2025-02-25</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -237,72 +233,46 @@ MathJax = {
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="Basic-Concepts"><a href="#Basic-Concepts" class="headerlink" title="Basic Concepts"></a>Basic Concepts</h2><h3 id="A-grid-world-example"><a href="#A-grid-world-example" class="headerlink" title="A grid-world example"></a>A grid-world example</h3><ul>
-<li><strong>State: The status of the agent with respect to the environment.</strong><ul>
-<li>在grid-world示例中，agent的位置就是state.</li>
-</ul>
+        <h2 id="Policy-Learning-and-Value-Learning"><a href="#Policy-Learning-and-Value-Learning" class="headerlink" title="Policy Learning and Value Learning"></a>Policy Learning and Value Learning</h2><p>深度学习的目标是找到最优的策略，通常有两种办法：策略学习和Q学习。Policy Learning 的优化对象就是策略函数 $\pi(a|s)$, 而 Value Learning 的优化对象是 $Q^*(s,a)$, 目标是找到最准确的 Optimal Action Value 函数，从而据此选择最合适的策略。</p>
+<h2 id="Deep-Q-Network-DQN"><a href="#Deep-Q-Network-DQN" class="headerlink" title="Deep Q Network (DQN)"></a>Deep Q Network (DQN)</h2><p>Deep Q-Learning 的目标是，给定状态和动作，预测其可能最高获得回报的期望（最高意味着选择最好的策略）。我们用一个神经网络来预测这个期望。Deep Q-Learning 的方法是，先把 state 输入卷积层，抽取为特征之后，再输入全连接层，最后返回一个分数向量，经过 softmax 函数之后转化为概率值，最后选择概率最大的那一个 action 作为执行动作。（有个小问题：在 LLM 中，为了使生成的文本更灵活丰富，往往不会单纯选择概率最大的输出，而是根据 temperature 和 top_p 参数，从概率最大的几个中采样取出，这样的思路是否能用到 DQN 中呢？这会不会使得 DQN 在训练初期表现得更好？）</p>
+<p><img src="image-1.png" alt="alt text"></p>
+<p>Deep Q-Learning 网络可以记作 $Q(s,a;\textbf{\textit{w}})$, 式中 $\textbf{\textit{w}}$ 表示神经网络的参数（也就是训练的对象）。要训练神经网络，我们应该找出一个损失函数，比如关于预测的回报和真实的回报$y$，我们取：<br>\[<br>L(\textbf{\textit{w}}) = \frac{1}{2} (Q(s,a ; \textbf{\textit{w}}) - y)^2<br>\]<br>然后求梯度：<br>\[<br>\nabla_{\textbf{\textit{w}}}L(\textbf{\textit{w}}) = (Q(s,a ; \textbf{\textit{w}}) - y) \cdot \nabla_{\textbf{\textit{w}}} Q(s,a ; \textbf{\textit{w}})<br>\]<br>注意，对于一个标量求关于矢量的梯度，梯度的形状与矢量的形状一致。然后做梯度下降（取学习率为 $\alpha$ ）：<br>\[<br>\textbf{\textit{w}} \leftarrow \textbf{\textit{w}} - \alpha \cdot \nabla_{\textbf{\textit{w}}}L(\textbf{\textit{w}})<br>\]<br>然而这种办法存在一种弊端：每次跑完一个 trajectory（假设episodic）才能做一次更新，优化的效率太低了，有没有其他的办法实现每一步更新一次呢？这就需要 Temporal Difference 算法（时间差分算法）。</p>
+<h2 id="Temporal-Difference-Algorithm"><a href="#Temporal-Difference-Algorithm" class="headerlink" title="Temporal Difference Algorithm"></a>Temporal Difference Algorithm</h2><p>时间差分算法实现了每运行一步更新一次神经网络参数。具体方法如下：</p>
+<ol>
+<li>观察所处的状态 $s_t$</li>
+<li>根据 $Q(s_t,a_t;\textbf{\textit{w}})$, 选择预期回报最大的动作执行</li>
+<li>执行一次之后收到了奖励 $r_{t}$, 并且更新到状态 $s_{t+1}$</li>
+<li>根据 $Q(s_{t+1},a_{t+1};\textbf{\textit{w}})$ 预测，并选择出预期回报最大的动作，但是不执行</li>
+<li>计算 TD error $\delta_{t} = Q(s_{t},a_{t};\textbf{\textit{w}}) - [r_{t} + \gamma \cdot Q(s_{t+1},a_{t+1};\textbf{\textit{w}})]$，其中，$Q(s_{t+1},a_{t+1};\textbf{\textit{w}})$ 称为 TD Target</li>
+<li>计算损失函数：<br>\[<br>L(\textbf{\textit{w}}) = \frac{1}{2} (Q(s_{t},a_{t};\textbf{\textit{w}}) - (r_{t} + \gamma \cdot Q(s_{t+1},a_{t+1};\textbf{\textit{w}})))^2<br>\]</li>
+<li>对损失函数求梯度（这里假装 TD Target 关于 $\textbf{\textit{w}}$ 是一个常数）：<br>\[<br>  \nabla_{\textbf{\textit{w}}}L(\textbf{\textit{w}}) = (Q(s_{t},a_{t};\textbf{\textit{w}}) - (r_{t} + \gamma \cdot Q(s_{t+1},a_{t+1};\textbf{\textit{w}}))) \cdot \nabla_{\textbf{\textit{w}}} Q(s,a ; \textbf{\textit{w}})<br>\]<br>   \[<br>  \nabla_{\textbf{\textit{w}}}L(\textbf{\textit{w}}) = \delta_{t} \cdot \nabla_{\textbf{\textit{w}}} Q(s,a ; \textbf{\textit{w}})<br>\]</li>
+<li>梯度下降：<br>\[<br>\textbf{\textit{w}} \leftarrow \textbf{\textit{w}} - \alpha \cdot \delta_{t} \cdot \nabla_{\textbf{\textit{w}}} Q(s,a ; \textbf{\textit{w}})<br>\]</li>
+</ol>
+<p>理解与解释：<br>时间差分算法是比较在每一步操作前和操作后对于最大回报期望的估计，每一步前后的区别是：每一步执行前，对未来的回报估计是纯的估计，而每一步执行后，都能够得到一个立刻的奖励（这个奖励是真实发生的），把这一步的真实奖励和这一步后对未来的估计结合起来，就能得到这一步前对未来的另一个估计。后者的这个估计比前者的估计要准确（毕竟有一部分是真实观测的），所以我们努力使得前者的估计贴近后者的估计，而这就可以用一个误差函数去优化了。</p>
+<p>此处还有一个问题：为什么要设置 TD Target: $r_{t} + \gamma \cdot Q(s_{t+1},a_{t+1};\textbf{\textit{w}})$ 有这样的形式？</p>
+<p>回忆一下回报的定义：\[ U_t = \sum_{k=t}^{n} \gamma^{k-t} \cdot R_k <script type="math/tex">$$ U_{t+1} = \sum_{k=t+1}^{n} \gamma^{k-t-1} \cdot R_k</script>由 $ U_t $ 和 $ U_{t+1}$的定义可得：</p>
+<p>\[<br>U_t = R_t + \gamma \cdot \sum_{k=t+1}^{n} \gamma^{k-t-1} \cdot R_k<br>\]</p>
+<p>回忆一下，Optimal Action Value Function 可以写成</p>
+<p>\[<br>Q_* (s_t, a_t) = \max_{\pi} \mathbb{E} [U_t | S_t = s_t, A_t = a_t]<br>\]</p>
+<p>再回忆一下Bellman Optimal Equation, 可以发现：</p>
+<p>\[<br>\begin{aligned}<br>Q_* (s_t, a_t) &amp;= \mathbb{E}_{S_{t+1} \sim p(\cdot | s_t, a_t)} [R_t + \gamma \cdot \max_{a \in \mathcal{A}} Q_* (S_{t+1}, a) | S_t = s_t, A_t = a_t].<br>\end{aligned}<br>\]</p>
+<p>我们可以用 Monte Carlo 算法对上式进行估计：<br>\[<br>Q_* (s_t, a_t) \approx r_t + \gamma \cdot \max_{a \in \mathcal{A}} Q_* (S_{t+1}, a)<br>\]</p>
+<p>再结合到 DQN 中，我们用 $Q(s_{t},a_{t};\textbf{\textit{w}})$ 来估计 $Q_*(s_{t},a_{t})$, 这就不难理解 TD Target 的形式了。</p>
+<h2 id="Training-Process"><a href="#Training-Process" class="headerlink" title="Training Process"></a>Training Process</h2><p>应用 TD 算法进行训练，步骤如下：</p>
+<ol>
+<li><p><strong>收集训练数据</strong>：我们可以用任何策略函数 $\pi$ 去控制智能体与环境交互，这个 $\pi$ 就叫做行为策略（behavior policy）。比较常用的是 $\epsilon$-greedy 策略：<br>\[<br>a_t =<br>\begin{cases}<br>\arg \max_a Q(s_t, a; w), &amp; \text{以概率 } (1 - \epsilon); \\<br>\text{均匀抽取 } A \text{ 中的一个动作}, &amp; \text{以概率 } \epsilon.<br>\end{cases}<br>\]<br>把智能体在一局游戏中的轨迹记作：<br>\[<br>s_1, a_1, r_1, s_2, a_2, r_2, \cdots, s_n, a_n, r_n.<br>\]<br>把一条轨迹划分成 $n$ 个 $(s_t, a_t, r_t, s_{t+1})$ 这种四元组，存入数组，这个数组叫做经验回放数组（replay buffer）。</p>
 </li>
-<li><strong>State Space</strong>: 所有state构成的一个集合就是State Space.</li>
-<li><strong>Action: For each state, there are some possible actions.</strong><ul>
-<li>在grid-world示例中，agent每一步可采取的行动（如向上走、向下走）就是action.</li>
-</ul>
+<li><p><strong>更新 DQN 参数</strong> $w$：</p>
+<ol>
+<li>随机从经验回放数组中取出一个四元组，记作 $(s_j, a_j, r_j, s_{j+1})$。设 DQN 当前的参数为 $w_{\text{now}}$，执行下面的步骤对参数做一次更新，得到新的参数 $w_{\text{new}}$。</li>
+<li>对 DQN 做正向传播，得到 Q 值：<br>\[<br>\hat{q}_j = Q(s_j, a_j; w_{\text{now}}) \quad \text{和} \quad \hat{q}_{j+1} = \max_{a \in A} Q(s_{j+1}, a; w_{\text{now}}).<br>\]</li>
+<li>计算 TD 目标和 TD 误差：<br>\[<br>\hat{y}_j = r_j + \gamma \cdot \hat{q}_{j+1} \quad \text{和} \quad \delta_j = \hat{q}_j - \hat{y}_j.<br>\]</li>
+<li>对 DQN 做反向传播，得到梯度：<br>\[<br>g_j = \nabla_w Q(s_j, a_j; w_{\text{now}}).<br>\]</li>
+<li>做梯度下降更新 DQN 的参数：<br>\[<br>w_{\text{new}} \leftarrow w_{\text{now}} - \alpha \cdot \delta_j \cdot g_j.<br>\]</li>
+</ol>
 </li>
-<li><strong>Action Space</strong>:所有action构成的一个集合就是Action Space.<br>Action Space与当前的state有关。</li>
-<li><strong>State Transition</strong>: When taking an action, the agent may move from one state to another. Such a process is called <em>state transition</em>.<br>\[<br>s_1 \xrightarrow{a_2} s_2<br>\]</li>
-<li>Tabular reprentation: 用表格的形式表达状态转移，但是只能表达deterministic cases。</li>
-<li><p>State transition probability: 用条件概率才能表达stochastic cases.<br>\[<br>p(s_2 | s_1, a_2) = 0.4 \\<br>p(s_1 | s_1, a_2) = 0.6<br>\]</p>
-</li>
-<li><p><strong>Policy: Policy tells the agent what actions to take at a state.</strong></p>
-<ul>
-<li>基于policy可以生成trajectory.</li>
-<li>仍然用条件概率表达stochastic policy.<br>\[<br>\pi(a_1 | s_1) = 0.5<br>\]</li>
-<li>Tabular representation of a policy 既可以描述deterministic policy，也可以描述stochastic policy.</li>
-<li>编程时用随机数描述概率的问题。</li>
-</ul>
-</li>
-<li><strong>Reward: A real number we get after taking an action.</strong><ul>
-<li>正的reward表示鼓励，负的reward表示惩罚。</li>
-<li>Reward可以理解为人机交互的一个接口。</li>
-<li>Tabular representation of a reward 只能描述deterministic reward.<br>\[<br>p(r = -1 | s_1, a_1) = 1<br>\]</li>
-<li>努力学习应该会获得奖励，但是奖励的多少是不一定的。</li>
-<li>鼓励行动，而非鼓励下一个状态。（注重过程而非结果）</li>
-</ul>
-</li>
-<li><strong>Trajectory: A trajectory is a state-action-reward chain.</strong><br>\[<br>s_1 \xrightarrow{a_2, r=0} s_2 \xrightarrow{a_3, r=0} s_5 \xrightarrow{a_3, r=0} s_8 \xrightarrow{a_2, r=1} s_9<br>\]</li>
-<li>Return: 在一个trajectory中所有reward的和即为return.<ul>
-<li>用于评估一个策略的好坏。</li>
-</ul>
-</li>
-<li>Discounted Return:<br>\[<br>\mathrm{Discounted\ Return} = \Sigma \gamma^{i}r_i<br>\]<ul>
-<li>$\gamma$ 被称为Discounted Rate, $\gamma$ 减少，可能会更加近视；$\gamma$ 增加，可能会较为远视。</li>
-</ul>
-</li>
-<li><strong>Episode: When interacting with the environment following a policy, the agent may stop at some <em>terminal states.</em> The resulting trajectory is called an episode(or a trial).</strong><ul>
-<li>Episode is a finite trajectory.(有限的任务被称为episodic tasks，永远进行下去的任务是continuing tasks)</li>
-<li>有两种将episodic tasks转化为continuing tasks的办法：<ul>
-<li>第一种设置terminal state的action space只有留在原地，且奖励始终为0.</li>
-<li>第二种设置terminal state仍然是一个正常的state, 仍然有可能再离开terminal state, 再次进入时会获得正的奖励。</li>
-<li>第二种方法更加鼓励积极的探索，学习效果更好。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="Markov-Decision-Process-MDP"><a href="#Markov-Decision-Process-MDP" class="headerlink" title="Markov Decision Process (MDP)"></a>Markov Decision Process (MDP)</h3><h4 id="Key-Elements"><a href="#Key-Elements" class="headerlink" title="Key Elements"></a>Key Elements</h4><ul>
-<li>Sets:<ul>
-<li>Set of States: $\mathcal{S}$</li>
-<li>Set of Actions: $\mathcal{A}(s)$ is associated for state $s\in \mathcal{S}$.</li>
-<li>Set of Rewards: $\mathcal{R}(s,a)$</li>
-</ul>
-</li>
-<li>Probability Distribution:<ul>
-<li>State transition probability: $p(s’|s,a)$</li>
-<li>Reward Probability: $p(r |s,a)$</li>
-</ul>
-</li>
-<li>Policy: $\pi(a|s)$</li>
-<li><strong><em>Markov Property</em>: memoryless property</strong><br>\[<br>\begin{align}<br>p(s_{t+1}|a_{t+1}, s_{t},\dots,a_1,s_0) = p(s_{t+1}|a_{t+1}, s_{t}) \\<br>p(r_{t+1}|a_{t+1}, s_{t},\dots,a_1,s_0) = p(r_{t+1}|a_{t+1}, s_{t})<br>\end{align}<br>\]</li>
-</ul>
+</ol>
+<p>智能体收集数据、更新 DQN 参数这两者可以同时进行。可以在智能体每执行一个动作之后，对 $w$ 做几次更新。也可以在每完成一局游戏之后，对 $w$ 做几次更新。</p>
 
     </div>
 
@@ -321,13 +291,10 @@ MathJax = {
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2025/02/09/CLIPBasedAudioProcessingSystem/" rel="prev" title="一种基于CLIP模型的智能视频帧匹配系统">
-      <i class="fa fa-chevron-left"></i> 一种基于CLIP模型的智能视频帧匹配系统
+    <a href="/2025/02/26/RL-4/" rel="prev" title="Reinforcement Learning-4: Value Iteration and Policy Iteration">
+      <i class="fa fa-chevron-left"></i> Reinforcement Learning-4: Value Iteration and Policy Iteration
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2025/02/23/RL-2/" rel="next" title="Reinforcement Learning-2: Bellman Equation">
-      Reinforcement Learning-2: Bellman Equation <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -386,7 +353,7 @@ MathJax = {
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Basic-Concepts"><span class="nav-number">1.</span> <span class="nav-text">Basic Concepts</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#A-grid-world-example"><span class="nav-number">1.1.</span> <span class="nav-text">A grid-world example</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Markov-Decision-Process-MDP"><span class="nav-number">1.2.</span> <span class="nav-text">Markov Decision Process (MDP)</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Key-Elements"><span class="nav-number">1.2.1.</span> <span class="nav-text">Key Elements</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Policy-Learning-and-Value-Learning"><span class="nav-number">1.</span> <span class="nav-text">Policy Learning and Value Learning</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Deep-Q-Network-DQN"><span class="nav-number">2.</span> <span class="nav-text">Deep Q Network (DQN)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Temporal-Difference-Algorithm"><span class="nav-number">3.</span> <span class="nav-text">Temporal Difference Algorithm</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Training-Process"><span class="nav-number">4.</span> <span class="nav-text">Training Process</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
