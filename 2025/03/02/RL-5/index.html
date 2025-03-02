@@ -41,7 +41,7 @@ MathJax = {
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://dasai-hzm.github.io/2025/03/02/RL-5/image-1.png">
 <meta property="article:published_time" content="2025-03-02T09:02:16.000Z">
-<meta property="article:modified_time" content="2025-03-02T03:37:30.869Z">
+<meta property="article:modified_time" content="2025-03-02T03:40:45.170Z">
 <meta property="article:author" content="HzmSailor">
 <meta property="article:tag" content="强化学习">
 <meta name="twitter:card" content="summary">
@@ -210,7 +210,7 @@ MathJax = {
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2025-03-02 17:02:16 / 修改时间：11:37:30" itemprop="dateCreated datePublished" datetime="2025-03-02T17:02:16+08:00">2025-03-02</time>
+              <time title="创建时间：2025-03-02 17:02:16 / 修改时间：11:40:45" itemprop="dateCreated datePublished" datetime="2025-03-02T17:02:16+08:00">2025-03-02</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -236,20 +236,20 @@ MathJax = {
         <h2 id="Policy-Learning-and-Value-Learning"><a href="#Policy-Learning-and-Value-Learning" class="headerlink" title="Policy Learning and Value Learning"></a>Policy Learning and Value Learning</h2><p>深度学习的目标是找到最优的策略，通常有两种办法：策略学习和Q学习。Policy Learning 的优化对象就是策略函数 $\pi(a|s)$, 而 Value Learning 的优化对象是 $Q^*(s,a)$, 目标是找到最准确的 Optimal Action Value 函数，从而据此选择最合适的策略。</p>
 <h2 id="Deep-Q-Network-DQN"><a href="#Deep-Q-Network-DQN" class="headerlink" title="Deep Q Network (DQN)"></a>Deep Q Network (DQN)</h2><p>Deep Q-Learning 的目标是，给定状态和动作，预测其可能最高获得回报的期望（最高意味着选择最好的策略）。我们用一个神经网络来预测这个期望。Deep Q-Learning 的方法是，先把 state 输入卷积层，抽取为特征之后，再输入全连接层，最后返回一个分数向量，经过 softmax 函数之后转化为概率值，最后选择概率最大的那一个 action 作为执行动作。（有个小问题：在 LLM 中，为了使生成的文本更灵活丰富，往往不会单纯选择概率最大的输出，而是根据 temperature 和 top_p 参数，从概率最大的几个中采样取出，这样的思路是否能用到 DQN 中呢？这会不会使得 DQN 在训练初期表现得更好？）</p>
 <p><img src="image-1.png" alt="alt text"></p>
-<p>Deep Q-Learning 网络可以记作 $Q(s,a;\textbf{\textit{w}})$, 式中 $\textbf{\textit{w}}$ 表示神经网络的参数（也就是训练的对象）。要训练神经网络，我们应该找出一个损失函数，比如关于预测的回报和真实的回报$y$，我们取：<br>\[<br>L(\textbf{\textit{w}}) = \frac{1}{2} (Q(s,a ; \textbf{\textit{w}}) - y)^2<br>\]<br>然后求梯度：<br>\[<br>\nabla_{\textbf{\textit{w}}}L(\textbf{\textit{w}}) = (Q(s,a ; \textbf{\textit{w}}) - y) \cdot \nabla_{\textbf{\textit{w}}} Q(s,a ; \textbf{\textit{w}})<br>\]<br>注意，对于一个标量求关于矢量的梯度，梯度的形状与矢量的形状一致。然后做梯度下降（取学习率为 $\alpha$ ）：<br>\[<br>\textbf{\textit{w}} \leftarrow \textbf{\textit{w}} - \alpha \cdot \nabla_{\textbf{\textit{w}}}L(\textbf{\textit{w}})<br>\]<br>然而这种办法存在一种弊端：每次跑完一个 trajectory（假设episodic）才能做一次更新，优化的效率太低了，有没有其他的办法实现每一步更新一次呢？这就需要 Temporal Difference 算法（时间差分算法）。</p>
+<p>Deep Q-Learning 网络可以记作 $Q(s,a;\textbf{w})$, 式中 $\textbf{w}$ 表示神经网络的参数（也就是训练的对象）。要训练神经网络，我们应该找出一个损失函数，比如关于预测的回报和真实的回报$y$，我们取：<br>\[<br>L(\textbf{w}) = \frac{1}{2} (Q(s,a ; \textbf{w}) - y)^2<br>\]<br>然后求梯度：<br>\[<br>\nabla_{\textbf{w}}L(\textbf{w}) = (Q(s,a ; \textbf{w}) - y) \cdot \nabla_{\textbf{w}} Q(s,a ; \textbf{w})<br>\]<br>注意，对于一个标量求关于矢量的梯度，梯度的形状与矢量的形状一致。然后做梯度下降（取学习率为 $\alpha$ ）：<br>\[<br>\textbf{w} \leftarrow \textbf{w} - \alpha \cdot \nabla_{\textbf{w}}L(\textbf{w})<br>\]<br>然而这种办法存在一种弊端：每次跑完一个 trajectory（假设episodic）才能做一次更新，优化的效率太低了，有没有其他的办法实现每一步更新一次呢？这就需要 Temporal Difference 算法（时间差分算法）。</p>
 <h2 id="Temporal-Difference-Algorithm"><a href="#Temporal-Difference-Algorithm" class="headerlink" title="Temporal Difference Algorithm"></a>Temporal Difference Algorithm</h2><p>时间差分算法实现了每运行一步更新一次神经网络参数。具体方法如下：</p>
 <ol>
 <li>观察所处的状态 $s_t$</li>
-<li>根据 $Q(s_t,a_t;\textbf{\textit{w}})$, 选择预期回报最大的动作执行</li>
+<li>根据 $Q(s_t,a_t;\textbf{w})$, 选择预期回报最大的动作执行</li>
 <li>执行一次之后收到了奖励 $r_{t}$, 并且更新到状态 $s_{t+1}$</li>
-<li>根据 $Q(s_{t+1},a_{t+1};\textbf{\textit{w}})$ 预测，并选择出预期回报最大的动作，但是不执行</li>
-<li>计算 TD error $\delta_{t} = Q(s_{t},a_{t};\textbf{\textit{w}}) - [r_{t} + \gamma \cdot Q(s_{t+1},a_{t+1};\textbf{\textit{w}})]$，其中，$Q(s_{t+1},a_{t+1};\textbf{\textit{w}})$ 称为 TD Target</li>
-<li>计算损失函数：<br>\[<br>L(\textbf{\textit{w}}) = \frac{1}{2} (Q(s_{t},a_{t};\textbf{\textit{w}}) - (r_{t} + \gamma \cdot Q(s_{t+1},a_{t+1};\textbf{\textit{w}})))^2<br>\]</li>
-<li>对损失函数求梯度（这里假装 TD Target 关于 $\textbf{\textit{w}}$ 是一个常数）：<br>\[<br>  \nabla_{\textbf{\textit{w}}}L(\textbf{\textit{w}}) = (Q(s_{t},a_{t};\textbf{\textit{w}}) - (r_{t} + \gamma \cdot Q(s_{t+1},a_{t+1};\textbf{\textit{w}}))) \cdot \nabla_{\textbf{\textit{w}}} Q(s,a ; \textbf{\textit{w}})<br>\]<br>   \[<br>  \nabla_{\textbf{\textit{w}}}L(\textbf{\textit{w}}) = \delta_{t} \cdot \nabla_{\textbf{\textit{w}}} Q(s,a ; \textbf{\textit{w}})<br>\]</li>
-<li>梯度下降：<br>\[<br>\textbf{\textit{w}} \leftarrow \textbf{\textit{w}} - \alpha \cdot \delta_{t} \cdot \nabla_{\textbf{\textit{w}}} Q(s,a ; \textbf{\textit{w}})<br>\]</li>
+<li>根据 $Q(s_{t+1},a_{t+1};\textbf{w})$ 预测，并选择出预期回报最大的动作，但是不执行</li>
+<li>计算 TD error $\delta_{t} = Q(s_{t},a_{t};\textbf{w}) - [r_{t} + \gamma \cdot Q(s_{t+1},a_{t+1};\textbf{w})]$，其中，$Q(s_{t+1},a_{t+1};\textbf{w})$ 称为 TD Target</li>
+<li>计算损失函数：<br>\[<br>L(\textbf{w}) = \frac{1}{2} (Q(s_{t},a_{t};\textbf{w}) - (r_{t} + \gamma \cdot Q(s_{t+1},a_{t+1};\textbf{w})))^2<br>\]</li>
+<li>对损失函数求梯度（这里假装 TD Target 关于 $\textbf{w}$ 是一个常数）：<br>\[<br>  \nabla_{\textbf{w}}L(\textbf{w}) = (Q(s_{t},a_{t};\textbf{w}) - (r_{t} + \gamma \cdot Q(s_{t+1},a_{t+1};\textbf{w}))) \cdot \nabla_{\textbf{w}} Q(s,a ; \textbf{w})<br>\]<br>   \[<br>  \nabla_{\textbf{w}}L(\textbf{w}) = \delta_{t} \cdot \nabla_{\textbf{w}} Q(s,a ; \textbf{w})<br>\]</li>
+<li>梯度下降：<br>\[<br>\textbf{w} \leftarrow \textbf{w} - \alpha \cdot \delta_{t} \cdot \nabla_{\textbf{w}} Q(s,a ; \textbf{w})<br>\]</li>
 </ol>
 <p>理解与解释：<br>时间差分算法是比较在每一步操作前和操作后对于最大回报期望的估计，每一步前后的区别是：每一步执行前，对未来的回报估计是纯的估计，而每一步执行后，都能够得到一个立刻的奖励（这个奖励是真实发生的），把这一步的真实奖励和这一步后对未来的估计结合起来，就能得到这一步前对未来的另一个估计。后者的这个估计比前者的估计要准确（毕竟有一部分是真实观测的），所以我们努力使得前者的估计贴近后者的估计，而这就可以用一个误差函数去优化了。</p>
-<p>此处还有一个问题：为什么要设置 TD Target: $r_{t} + \gamma \cdot Q(s_{t+1},a_{t+1};\textbf{\textit{w}})$ 有这样的形式？</p>
+<p>此处还有一个问题：为什么要设置 TD Target: $r_{t} + \gamma \cdot Q(s_{t+1},a_{t+1};\textbf{w})$ 有这样的形式？</p>
 <p>回忆一下回报的定义：\[ U_t = \sum_{k=t}^{n} \gamma^{k-t} \cdot R_k <script type="math/tex">$$ U_{t+1} = \sum_{k=t+1}^{n} \gamma^{k-t-1} \cdot R_k</script>由 $ U_t $ 和 $ U_{t+1}$的定义可得：</p>
 <p>\[<br>U_t = R_t + \gamma \cdot \sum_{k=t+1}^{n} \gamma^{k-t-1} \cdot R_k<br>\]</p>
 <p>回忆一下，Optimal Action Value Function 可以写成</p>
@@ -257,7 +257,7 @@ MathJax = {
 <p>再回忆一下Bellman Optimal Equation, 可以发现：</p>
 <p>\[<br>\begin{aligned}<br>Q_* (s_t, a_t) &amp;= \mathbb{E}_{S_{t+1} \sim p(\cdot | s_t, a_t)} [R_t + \gamma \cdot \max_{a \in \mathcal{A}} Q_* (S_{t+1}, a) | S_t = s_t, A_t = a_t].<br>\end{aligned}<br>\]</p>
 <p>我们可以用 Monte Carlo 算法对上式进行估计：<br>\[<br>Q_* (s_t, a_t) \approx r_t + \gamma \cdot \max_{a \in \mathcal{A}} Q_* (S_{t+1}, a)<br>\]</p>
-<p>再结合到 DQN 中，我们用 $Q(s_{t},a_{t};\textbf{\textit{w}})$ 来估计 $Q_*(s_{t},a_{t})$, 这就不难理解 TD Target 的形式了。</p>
+<p>再结合到 DQN 中，我们用 $Q(s_{t},a_{t};\textbf{w})$ 来估计 $Q_*(s_{t},a_{t})$, 这就不难理解 TD Target 的形式了。</p>
 <h2 id="Training-Process"><a href="#Training-Process" class="headerlink" title="Training Process"></a>Training Process</h2><p>应用 TD 算法进行训练，步骤如下：</p>
 <ol>
 <li><p><strong>收集训练数据</strong>：我们可以用任何策略函数 $\pi$ 去控制智能体与环境交互，这个 $\pi$ 就叫做行为策略（behavior policy）。比较常用的是 $\epsilon$-greedy 策略：<br>\[<br>a_t =<br>\begin{cases}<br>\arg \max_a Q(s_t, a; w), &amp; \text{以概率 } (1 - \epsilon); \\<br>\text{均匀抽取 } A \text{ 中的一个动作}, &amp; \text{以概率 } \epsilon.<br>\end{cases}<br>\]<br>把智能体在一局游戏中的轨迹记作：<br>\[<br>s_1, a_1, r_1, s_2, a_2, r_2, \cdots, s_n, a_n, r_n.<br>\]<br>把一条轨迹划分成 $n$ 个 $(s_t, a_t, r_t, s_{t+1})$ 这种四元组，存入数组，这个数组叫做经验回放数组（replay buffer）。</p>
