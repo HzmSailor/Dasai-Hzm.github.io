@@ -39,19 +39,19 @@ MathJax = {
 <meta property="og:site_name" content="HzmSailor&#39;s Learning Blog">
 <meta property="og:description" content="3D Vision 数据表征方法VoxelVoxel (译为体素)，是一种结构化的数据表征方法，就是把空间划为网格，每个网格有占据&#x2F;空置两种状态，如果是占据状态，则可以用 RGB 三通道来表征它的颜色。当然，一个点除了用公式写出： [x_i &#x3D; (x, y, z, o, r, g, b, …)] 其中，$o$ 可取 0 或 1，表示是否占据。一些情况下，也可以取 0 至 1 中的某些数，表示占据的">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://dasai-hzm.github.io/2025/03/21/PointNet/image-419.png">
-<meta property="og:image" content="https://dasai-hzm.github.io/2025/03/21/PointNet/image-418.png">
-<meta property="og:image" content="https://dasai-hzm.github.io/2025/03/21/PointNet/image-5.png">
-<meta property="og:image" content="https://dasai-hzm.github.io/2025/03/21/PointNet/image-4.png">
-<meta property="og:image" content="https://dasai-hzm.github.io/2025/03/21/PointNet/image-411.png">
-<meta property="og:image" content="https://dasai-hzm.github.io/2025/03/21/PointNet/image-417.png">
-<meta property="og:image" content="https://dasai-hzm.github.io/2025/03/21/PointNet/image-412.png">
+<meta property="og:image" content="https://dasai-hzm.github.io/images/image-419.png">
+<meta property="og:image" content="https://dasai-hzm.github.io/images/image-418.png">
+<meta property="og:image" content="https://dasai-hzm.github.io/images/image-5.png">
+<meta property="og:image" content="https://dasai-hzm.github.io/images/image-4.png">
+<meta property="og:image" content="https://dasai-hzm.github.io/images/image-411.png">
+<meta property="og:image" content="https://dasai-hzm.github.io/images/image-417.png">
+<meta property="og:image" content="https://dasai-hzm.github.io/images/image-412.png">
 <meta property="article:published_time" content="2025-03-21T14:48:16.000Z">
-<meta property="article:modified_time" content="2025-04-01T05:40:09.369Z">
+<meta property="article:modified_time" content="2025-04-01T05:48:02.062Z">
 <meta property="article:author" content="HzmSailor">
 <meta property="article:tag" content="计算机视觉">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://dasai-hzm.github.io/2025/03/21/PointNet/image-419.png">
+<meta name="twitter:image" content="https://dasai-hzm.github.io/images/image-419.png">
 
 <link rel="canonical" href="https://dasai-hzm.github.io/2025/03/21/PointNet/">
 
@@ -222,7 +222,7 @@ MathJax = {
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-04-01 13:40:09" itemprop="dateModified" datetime="2025-04-01T13:40:09+08:00">2025-04-01</time>
+                <time title="修改时间：2025-04-01 13:48:02" itemprop="dateModified" datetime="2025-04-01T13:48:02+08:00">2025-04-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -248,14 +248,14 @@ MathJax = {
         <h1 id="3D-Vision-数据表征方法"><a href="#3D-Vision-数据表征方法" class="headerlink" title="3D Vision 数据表征方法"></a>3D Vision 数据表征方法</h1><h2 id="Voxel"><a href="#Voxel" class="headerlink" title="Voxel"></a>Voxel</h2><p>Voxel (译为体素)，是一种结构化的数据表征方法，就是把空间划为网格，每个网格有占据/空置两种状态，如果是占据状态，则可以用 RGB 三通道来表征它的颜色。当然，一个点除了用公式写出：</p>
 <p>[<br>x_i = (x, y, z, o, r, g, b, …)<br>]</p>
 <p>其中，$o$ 可取 0 或 1，表示是否占据。一些情况下，也可以取 0 至 1 中的某些数，表示占据的概率。一个例子如下图：</p>
-<p><img src="image-419.png" alt="alt text"></p>
-<p>Voxel 的好处是结构化，形状规则，坏处是内存开销较大，分辨率恒定（在一些精细结构上，恒定的分辨率就显得不够用了）。当然，为了解决分辨率的问题，还有一种 Octree (八叉树结构), 采用树结构进行存储。一个空间被分为 8 份（8 个立方体），如果这一份里有信息，就继续细分，如果这一份里没有信息，就不再分。这样有助于节约存储空间，实现动态的分辨率。如下图：<br><img src="image-418.png" alt="alt text"></p>
+<p><img src="\images\image-419.png" alt="alt text"></p>
+<p>Voxel 的好处是结构化，形状规则，坏处是内存开销较大，分辨率恒定（在一些精细结构上，恒定的分辨率就显得不够用了）。当然，为了解决分辨率的问题，还有一种 Octree (八叉树结构), 采用树结构进行存储。一个空间被分为 8 份（8 个立方体），如果这一份里有信息，就继续细分，如果这一份里没有信息，就不再分。这样有助于节约存储空间，实现动态的分辨率。如下图：<br><img src="\images\image-418.png" alt="alt text"></p>
 <h2 id="Mesh"><a href="#Mesh" class="headerlink" title="Mesh"></a>Mesh</h2><p>Mesh 也是一种结构化存储三维数据的方法。它由顶点、边和面构成。它首先存储一个顶点列表：$x_i = (x, y, z)$，再存储一个面索引列表：$f_s = (x_i, x_j, x_k,…)$. Mesh 可以按照面的形状分类，有三角形 (Triangle Mesh)、四边形 (Quad Mesh)、不定形 (Polygon Mesh) 等等。</p>
 <h1 id="3D-CNN"><a href="#3D-CNN" class="headerlink" title="3D CNN"></a>3D CNN</h1><p>3D CNN 就是把二维的卷积神经网络拓展到三维，最早的 3D CNN 被用于处理时空序列信号（如视频，见：Tran, Du, et al. “Learning spatiotemporal features with 3d convolutional networks.” Proceedings of the IEEE international conference on computer vision. 2015.），当然，3D CNN 也可用于处理 3D Vision. </p>
 <p>下面介绍这篇文章中 3D CNN 的结构：与二维卷积类似，每一个卷积层仍有一个卷积核，在空间上尺寸为 3*3*3，通道数为 3 ，每次移动的 stride 为 1（在三个维度上的移动 stride 一致），卷积核的个数在图中列出。</p>
-<p>每一个卷积层的后面都紧跟着一个 max pooling（PointNet也有），就是在一个 pooling kernel 的范围内，选择最大的数值以代表整个 pooling kernel. Pooling 是 CNN 的常见操作，有助于降低计算复杂度、降噪、提取到更高级/抽象的特征。当然，适不适合 pooling 要根据具体问题选择，比如 AlphaGo 在处理围棋的棋局信息时，显然就不适合用 pooling. Max pooling 可以参考下图。<br><img src="image-5.png" alt="alt text"></p>
+<p>每一个卷积层的后面都紧跟着一个 max pooling（PointNet也有），就是在一个 pooling kernel 的范围内，选择最大的数值以代表整个 pooling kernel. Pooling 是 CNN 的常见操作，有助于降低计算复杂度、降噪、提取到更高级/抽象的特征。当然，适不适合 pooling 要根据具体问题选择，比如 AlphaGo 在处理围棋的棋局信息时，显然就不适合用 pooling. Max pooling 可以参考下图。<br><img src="\images\image-5.png" alt="alt text"></p>
 <p>最后先要把三维特征图展平为一维，然后经过两个 FC 网络，目的是把图像的特征映射为分数向量，实现分类。整个流程图如下：</p>
-<p><img src="image-4.png" alt="alt text"></p>
+<p><img src="\images\image-4.png" alt="alt text"></p>
 <p>注：</p>
 <ol>
 <li>自己学习 CNN 的时候一开始错误地理解了卷积核的个数和通道数的关系，总结一下：上一层的卷积核的个数作为这一层的输入通道数，这一层的每一个卷积核对所有的输入通道求和，这一层的输出通道数等于这一层的卷积核的个数。</li>
@@ -274,7 +274,7 @@ MathJax = {
 <li>分割任务：分割任务要求对每一个点都要进行分类，所以我们要基于整体语义理解每一个点的信息，因此做一个 concat，即把单点向量与整体语义向量直接拼接后经过 MLP 得到单点特征，再过一个 MLP 得到每一个点的打分（输出是矩阵）。</li>
 </ul>
 <p>至于空间变换不变性，PointNet 采取了对输入点云预处理的方法以将输入对齐，具体来说：先用一个 T-Net (整个 PointNet 的缩小版，仍含有 MLP, max pooling 等基本结构) 预测一个 3*3 矩阵，再直接将这个矩阵乘以输入点云的位置维度，相当于把输入点云做了一次旋转变换。在点云经过 MLP 提取特征之后，对特征进行同样的操作（这里的矩阵就是特征的维度*特征的维度，这会带来参数量较大，容易过拟合，不易学习的问题，因此作者在这里又针对这个矩阵设置了正则项）。</p>
-<p><img src="image-411.png" alt="alt text"></p>
+<p><img src="\images\image-411.png" alt="alt text"></p>
 <p>注：映射到高维空间可以增加复杂度增强模型的表达能力，并且原始论文论证了当维度足够高时，PointNet 可以拟合任意的连续集合函数。</p>
 <h1 id="PointNet-1"><a href="#PointNet-1" class="headerlink" title="PointNet++"></a>PointNet++</h1><p>PointNet 处理的是 3D 视觉的问题，却抛开了视觉最常用的 CNN 结构，很有创新，但是如果能借鉴一些 CNN 的思想，或许模型的效果还会提高，这就有了 PointNet++。</p>
 <p>宏观上看，PointNet++ 是在点云局部递归地调用 PointNet, 使其能发现局部特征并且得到不同层级的特征信息（神似 CNN）。</p>
@@ -300,9 +300,9 @@ MathJax = {
 <p>然而 MSG 相当于每一个循环里的 Grouping 和 PointNet 都要重复很多次，且包含了在较低层级上对较大的半径作 PointNet, 这样的计算开销很大，因此，作者又提出了 MRG. 融合了不同层级的特征. </p>
 <p>MRG 思路如下：每一层的特征依然是两个特征的 concat, 第一个特征是这一层的子特征作 PointNet(left), 第二个特征是这一层的前一层的点直接作 PointNet(right). 在稀疏点云中，右侧的特征更可信，稠密点云中，左侧的特征更可信。把这两种不同的特征融合起来，可以使模型更适应不同密度的点云。</p>
 <p>下图中 (a) 是 MSG，(b) 是 MRG.</p>
-<p><img src="image-417.png" alt="alt text"></p>
+<p><img src="\images\image-417.png" alt="alt text"></p>
 <p>PointNet++ 的整体流程图如下：</p>
-<p><img src="image-412.png" alt="alt text"></p>
+<p><img src="\images\image-412.png" alt="alt text"></p>
 <p>论文中提到，这种分组方法相比于 CNN 的卷积核滑动的办法，能减少 overlap, 保证每个分组之间的独立性，效果更好。</p>
 
     </div>
