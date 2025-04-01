@@ -41,13 +41,13 @@ MathJax = {
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://dasai-hzm.github.io/images/image-419.png">
 <meta property="og:image" content="https://dasai-hzm.github.io/images/image-418.png">
-<meta property="og:image" content="https://dasai-hzm.github.io/images/image-5.png">
-<meta property="og:image" content="https://dasai-hzm.github.io/images/image-4.png">
+<meta property="og:image" content="https://dasai-hzm.github.io/images/image-415.png">
+<meta property="og:image" content="https://dasai-hzm.github.io/images/image-414.png">
 <meta property="og:image" content="https://dasai-hzm.github.io/images/image-411.png">
 <meta property="og:image" content="https://dasai-hzm.github.io/images/image-417.png">
 <meta property="og:image" content="https://dasai-hzm.github.io/images/image-412.png">
 <meta property="article:published_time" content="2025-03-21T14:48:16.000Z">
-<meta property="article:modified_time" content="2025-04-01T05:48:02.062Z">
+<meta property="article:modified_time" content="2025-04-01T05:50:11.092Z">
 <meta property="article:author" content="HzmSailor">
 <meta property="article:tag" content="计算机视觉">
 <meta name="twitter:card" content="summary">
@@ -222,7 +222,7 @@ MathJax = {
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-04-01 13:48:02" itemprop="dateModified" datetime="2025-04-01T13:48:02+08:00">2025-04-01</time>
+                <time title="修改时间：2025-04-01 13:50:11" itemprop="dateModified" datetime="2025-04-01T13:50:11+08:00">2025-04-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -253,9 +253,9 @@ MathJax = {
 <h2 id="Mesh"><a href="#Mesh" class="headerlink" title="Mesh"></a>Mesh</h2><p>Mesh 也是一种结构化存储三维数据的方法。它由顶点、边和面构成。它首先存储一个顶点列表：$x_i = (x, y, z)$，再存储一个面索引列表：$f_s = (x_i, x_j, x_k,…)$. Mesh 可以按照面的形状分类，有三角形 (Triangle Mesh)、四边形 (Quad Mesh)、不定形 (Polygon Mesh) 等等。</p>
 <h1 id="3D-CNN"><a href="#3D-CNN" class="headerlink" title="3D CNN"></a>3D CNN</h1><p>3D CNN 就是把二维的卷积神经网络拓展到三维，最早的 3D CNN 被用于处理时空序列信号（如视频，见：Tran, Du, et al. “Learning spatiotemporal features with 3d convolutional networks.” Proceedings of the IEEE international conference on computer vision. 2015.），当然，3D CNN 也可用于处理 3D Vision. </p>
 <p>下面介绍这篇文章中 3D CNN 的结构：与二维卷积类似，每一个卷积层仍有一个卷积核，在空间上尺寸为 3*3*3，通道数为 3 ，每次移动的 stride 为 1（在三个维度上的移动 stride 一致），卷积核的个数在图中列出。</p>
-<p>每一个卷积层的后面都紧跟着一个 max pooling（PointNet也有），就是在一个 pooling kernel 的范围内，选择最大的数值以代表整个 pooling kernel. Pooling 是 CNN 的常见操作，有助于降低计算复杂度、降噪、提取到更高级/抽象的特征。当然，适不适合 pooling 要根据具体问题选择，比如 AlphaGo 在处理围棋的棋局信息时，显然就不适合用 pooling. Max pooling 可以参考下图。<br><img src="\images\image-5.png" alt="alt text"></p>
+<p>每一个卷积层的后面都紧跟着一个 max pooling（PointNet也有），就是在一个 pooling kernel 的范围内，选择最大的数值以代表整个 pooling kernel. Pooling 是 CNN 的常见操作，有助于降低计算复杂度、降噪、提取到更高级/抽象的特征。当然，适不适合 pooling 要根据具体问题选择，比如 AlphaGo 在处理围棋的棋局信息时，显然就不适合用 pooling. Max pooling 可以参考下图。<br><img src="\images\image-415.png" alt="alt text"></p>
 <p>最后先要把三维特征图展平为一维，然后经过两个 FC 网络，目的是把图像的特征映射为分数向量，实现分类。整个流程图如下：</p>
-<p><img src="\images\image-4.png" alt="alt text"></p>
+<p><img src="\images\image-414.png" alt="alt text"></p>
 <p>注：</p>
 <ol>
 <li>自己学习 CNN 的时候一开始错误地理解了卷积核的个数和通道数的关系，总结一下：上一层的卷积核的个数作为这一层的输入通道数，这一层的每一个卷积核对所有的输入通道求和，这一层的输出通道数等于这一层的卷积核的个数。</li>
