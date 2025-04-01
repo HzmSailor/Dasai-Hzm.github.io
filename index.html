@@ -209,7 +209,7 @@ MathJax = {
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-04-01 13:50:11" itemprop="dateModified" datetime="2025-04-01T13:50:11+08:00">2025-04-01</time>
+                <time title="修改时间：2025-04-01 13:59:15" itemprop="dateModified" datetime="2025-04-01T13:59:15+08:00">2025-04-01</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -233,7 +233,7 @@ MathJax = {
 
       
           <h1 id="3D-Vision-数据表征方法"><a href="#3D-Vision-数据表征方法" class="headerlink" title="3D Vision 数据表征方法"></a>3D Vision 数据表征方法</h1><h2 id="Voxel"><a href="#Voxel" class="headerlink" title="Voxel"></a>Voxel</h2><p>Voxel (译为体素)，是一种结构化的数据表征方法，就是把空间划为网格，每个网格有占据/空置两种状态，如果是占据状态，则可以用 RGB 三通道来表征它的颜色。当然，一个点除了用公式写出：</p>
-<p>[<br>x_i = (x, y, z, o, r, g, b, …)<br>]</p>
+<p>\[<br>x_i = (x, y, z, o, r, g, b, …)<br>\]</p>
 <p>其中，$o$ 可取 0 或 1，表示是否占据。一些情况下，也可以取 0 至 1 中的某些数，表示占据的概率。一个例子如下图：</p>
 <p><img src="\images\image-419.png" alt="alt text"></p>
 <p>Voxel 的好处是结构化，形状规则，坏处是内存开销较大，分辨率恒定（在一些精细结构上，恒定的分辨率就显得不够用了）。当然，为了解决分辨率的问题，还有一种 Octree (八叉树结构), 采用树结构进行存储。一个空间被分为 8 份（8 个立方体），如果这一份里有信息，就继续细分，如果这一份里没有信息，就不再分。这样有助于节约存储空间，实现动态的分辨率。如下图：<br><img src="\images\image-418.png" alt="alt text"></p>
@@ -256,7 +256,7 @@ MathJax = {
 <p>PointNet 的思路：点云数据的无序性导致我们应该采用一种对称函数，同时这样的函数要有足够强的拟合能力。于是就有了 PointNet，其整体思路是：对于不同的点先采用同样的多层感知机将其映射到高维空间，然后对其作 max pooling (这显然是一个对称函数), 得到一个向量，可以作为整个点云的语义特征。下面根据不同的任务分别讨论：</p>
 <ul>
 <li><p>分类任务：直接把这个整体的语义特征过一个 MLP 就得到打分，进行分类即可（输出是概率向量）。公式化如下，式中 $\gamma$, $h$ 均为 MLP：</p>
-<p>[<br>f(x_1, x_2,…, x_n) = \gamma(\max_{i = 1, 2,…, n}{h(x_i)})<br>]</p>
+<p>\[<br>f(x_1, x_2,…, x_n) = \gamma(\max_{i = 1, 2,…, n}{h(x_i)})<br>\]</p>
 </li>
 <li>分割任务：分割任务要求对每一个点都要进行分类，所以我们要基于整体语义理解每一个点的信息，因此做一个 concat，即把单点向量与整体语义向量直接拼接后经过 MLP 得到单点特征，再过一个 MLP 得到每一个点的打分（输出是矩阵）。</li>
 </ul>
