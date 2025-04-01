@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 7.3.0">
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$','$'], ['\\(','\\)']],  // 配置行内公式分隔符
+    displayMath: [['$$','$$'], ['\\[','\\]']] // 配置行间公式分隔符
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre'] // 避免处理代码块
+  }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Noto Serif Simplified Chinese:300,300italic,400,400italic,700,700italic&display=swap&subset=latin,latin-ext">
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"dasai-hzm.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="3D Vision 数据表征方法VoxelVoxel (译为体素)，是一种结构化的数据表征方法，就是把空间划为网格，每个网格有占据&#x2F;空置两种状态，如果是占据状态，则可以用 RGB 三通道来表征它的颜色。当然，一个点除了用公式写出： [x_i &#x3D; (x, y, z, o, r, g, b, …)] 其中，$o$ 可取 0 或 1，表示是否占据。一些情况下，也可以取 0 至 1 中的某些数，表示占据的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="3D Vision: 3D CNN &amp;&amp; PointNet">
+<meta property="og:url" content="https://dasai-hzm.github.io/2025/03/21/PointNet/index.html">
+<meta property="og:site_name" content="HzmSailor&#39;s Learning Blog">
+<meta property="og:description" content="3D Vision 数据表征方法VoxelVoxel (译为体素)，是一种结构化的数据表征方法，就是把空间划为网格，每个网格有占据&#x2F;空置两种状态，如果是占据状态，则可以用 RGB 三通道来表征它的颜色。当然，一个点除了用公式写出： [x_i &#x3D; (x, y, z, o, r, g, b, …)] 其中，$o$ 可取 0 或 1，表示是否占据。一些情况下，也可以取 0 至 1 中的某些数，表示占据的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://dasai-hzm.github.io/2025/03/21/PointNet/image-419.png">
+<meta property="og:image" content="https://dasai-hzm.github.io/2025/03/21/PointNet/image-418.png">
+<meta property="og:image" content="https://dasai-hzm.github.io/2025/03/21/PointNet/image-5.png">
+<meta property="og:image" content="https://dasai-hzm.github.io/2025/03/21/PointNet/image-4.png">
+<meta property="og:image" content="https://dasai-hzm.github.io/2025/03/21/PointNet/image-411.png">
+<meta property="og:image" content="https://dasai-hzm.github.io/2025/03/21/PointNet/image-417.png">
+<meta property="og:image" content="https://dasai-hzm.github.io/2025/03/21/PointNet/image-412.png">
+<meta property="article:published_time" content="2025-03-21T14:48:16.000Z">
+<meta property="article:modified_time" content="2025-04-01T05:40:09.369Z">
+<meta property="article:author" content="HzmSailor">
+<meta property="article:tag" content="计算机视觉">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://dasai-hzm.github.io/2025/03/21/PointNet/image-419.png">
+
+<link rel="canonical" href="https://dasai-hzm.github.io/2025/03/21/PointNet/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>3D Vision: 3D CNN && PointNet | HzmSailor's Learning Blog</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">HzmSailor's Learning Blog</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+      <p class="site-subtitle" itemprop="description">HzmSailor 的技术博客</p>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+        <li class="menu-item menu-item-sitemap">
+
+    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://dasai-hzm.github.io/2025/03/21/PointNet/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="HzmSailor">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HzmSailor's Learning Blog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          3D Vision: 3D CNN && PointNet
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-03-21 22:48:16" itemprop="dateCreated datePublished" datetime="2025-03-21T22:48:16+08:00">2025-03-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-04-01 13:40:09" itemprop="dateModified" datetime="2025-04-01T13:40:09+08:00">2025-04-01</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="3D-Vision-数据表征方法"><a href="#3D-Vision-数据表征方法" class="headerlink" title="3D Vision 数据表征方法"></a>3D Vision 数据表征方法</h1><h2 id="Voxel"><a href="#Voxel" class="headerlink" title="Voxel"></a>Voxel</h2><p>Voxel (译为体素)，是一种结构化的数据表征方法，就是把空间划为网格，每个网格有占据/空置两种状态，如果是占据状态，则可以用 RGB 三通道来表征它的颜色。当然，一个点除了用公式写出：</p>
+<p>[<br>x_i = (x, y, z, o, r, g, b, …)<br>]</p>
+<p>其中，$o$ 可取 0 或 1，表示是否占据。一些情况下，也可以取 0 至 1 中的某些数，表示占据的概率。一个例子如下图：</p>
+<p><img src="image-419.png" alt="alt text"></p>
+<p>Voxel 的好处是结构化，形状规则，坏处是内存开销较大，分辨率恒定（在一些精细结构上，恒定的分辨率就显得不够用了）。当然，为了解决分辨率的问题，还有一种 Octree (八叉树结构), 采用树结构进行存储。一个空间被分为 8 份（8 个立方体），如果这一份里有信息，就继续细分，如果这一份里没有信息，就不再分。这样有助于节约存储空间，实现动态的分辨率。如下图：<br><img src="image-418.png" alt="alt text"></p>
+<h2 id="Mesh"><a href="#Mesh" class="headerlink" title="Mesh"></a>Mesh</h2><p>Mesh 也是一种结构化存储三维数据的方法。它由顶点、边和面构成。它首先存储一个顶点列表：$x_i = (x, y, z)$，再存储一个面索引列表：$f_s = (x_i, x_j, x_k,…)$. Mesh 可以按照面的形状分类，有三角形 (Triangle Mesh)、四边形 (Quad Mesh)、不定形 (Polygon Mesh) 等等。</p>
+<h1 id="3D-CNN"><a href="#3D-CNN" class="headerlink" title="3D CNN"></a>3D CNN</h1><p>3D CNN 就是把二维的卷积神经网络拓展到三维，最早的 3D CNN 被用于处理时空序列信号（如视频，见：Tran, Du, et al. “Learning spatiotemporal features with 3d convolutional networks.” Proceedings of the IEEE international conference on computer vision. 2015.），当然，3D CNN 也可用于处理 3D Vision. </p>
+<p>下面介绍这篇文章中 3D CNN 的结构：与二维卷积类似，每一个卷积层仍有一个卷积核，在空间上尺寸为 3*3*3，通道数为 3 ，每次移动的 stride 为 1（在三个维度上的移动 stride 一致），卷积核的个数在图中列出。</p>
+<p>每一个卷积层的后面都紧跟着一个 max pooling（PointNet也有），就是在一个 pooling kernel 的范围内，选择最大的数值以代表整个 pooling kernel. Pooling 是 CNN 的常见操作，有助于降低计算复杂度、降噪、提取到更高级/抽象的特征。当然，适不适合 pooling 要根据具体问题选择，比如 AlphaGo 在处理围棋的棋局信息时，显然就不适合用 pooling. Max pooling 可以参考下图。<br><img src="image-5.png" alt="alt text"></p>
+<p>最后先要把三维特征图展平为一维，然后经过两个 FC 网络，目的是把图像的特征映射为分数向量，实现分类。整个流程图如下：</p>
+<p><img src="image-4.png" alt="alt text"></p>
+<p>注：</p>
+<ol>
+<li>自己学习 CNN 的时候一开始错误地理解了卷积核的个数和通道数的关系，总结一下：上一层的卷积核的个数作为这一层的输入通道数，这一层的每一个卷积核对所有的输入通道求和，这一层的输出通道数等于这一层的卷积核的个数。</li>
+<li>3D CNN 由于其处理的特性，它只能接受结构化的数据（如 Voxel 这样），对于非结构化的数据（如点云，它需要先把点云转为 Voxel.</li>
+</ol>
+<h1 id="PointNet"><a href="#PointNet" class="headerlink" title="PointNet"></a>PointNet</h1><p>PointNet 直接处理点云数据，点云数据的特点：</p>
+<ul>
+<li>无序性：每个点之间独立，N 个点输入是无序的，即模型比如对 N! 种不同排列的输入给出同样的输出。</li>
+<li>几何变换不变性：对点云在空间上做旋转变换（相当于传感器的位置变化），模型在做分类、分割等任务时应给出同样的结果。</li>
+</ul>
+<p>PointNet 的思路：点云数据的无序性导致我们应该采用一种对称函数，同时这样的函数要有足够强的拟合能力。于是就有了 PointNet，其整体思路是：对于不同的点先采用同样的多层感知机将其映射到高维空间，然后对其作 max pooling (这显然是一个对称函数), 得到一个向量，可以作为整个点云的语义特征。下面根据不同的任务分别讨论：</p>
+<ul>
+<li><p>分类任务：直接把这个整体的语义特征过一个 MLP 就得到打分，进行分类即可（输出是概率向量）。公式化如下，式中 $\gamma$, $h$ 均为 MLP：</p>
+<p>[<br>f(x_1, x_2,…, x_n) = \gamma(\max_{i = 1, 2,…, n}{h(x_i)})<br>]</p>
+</li>
+<li>分割任务：分割任务要求对每一个点都要进行分类，所以我们要基于整体语义理解每一个点的信息，因此做一个 concat，即把单点向量与整体语义向量直接拼接后经过 MLP 得到单点特征，再过一个 MLP 得到每一个点的打分（输出是矩阵）。</li>
+</ul>
+<p>至于空间变换不变性，PointNet 采取了对输入点云预处理的方法以将输入对齐，具体来说：先用一个 T-Net (整个 PointNet 的缩小版，仍含有 MLP, max pooling 等基本结构) 预测一个 3*3 矩阵，再直接将这个矩阵乘以输入点云的位置维度，相当于把输入点云做了一次旋转变换。在点云经过 MLP 提取特征之后，对特征进行同样的操作（这里的矩阵就是特征的维度*特征的维度，这会带来参数量较大，容易过拟合，不易学习的问题，因此作者在这里又针对这个矩阵设置了正则项）。</p>
+<p><img src="image-411.png" alt="alt text"></p>
+<p>注：映射到高维空间可以增加复杂度增强模型的表达能力，并且原始论文论证了当维度足够高时，PointNet 可以拟合任意的连续集合函数。</p>
+<h1 id="PointNet-1"><a href="#PointNet-1" class="headerlink" title="PointNet++"></a>PointNet++</h1><p>PointNet 处理的是 3D 视觉的问题，却抛开了视觉最常用的 CNN 结构，很有创新，但是如果能借鉴一些 CNN 的思想，或许模型的效果还会提高，这就有了 PointNet++。</p>
+<p>宏观上看，PointNet++ 是在点云局部递归地调用 PointNet, 使其能发现局部特征并且得到不同层级的特征信息（神似 CNN）。</p>
+<h2 id="Sampling"><a href="#Sampling" class="headerlink" title="Sampling"></a>Sampling</h2><p>在每一次调用 PointNet 时，首先对输入的点云进行采样和分组。采样一般采用最远点采样策略（Farthest Point Sampling, FPS），描述如下：</p>
+<ol>
+<li>随机选取一个点作为中心点</li>
+<li>计算每个点到中心点集中所有点的最近距离</li>
+<li>选出最近距离最远的那个点作为下一个中心点，重复 2, 直至选出 N 个中心点。</li>
+</ol>
+<p>相比于随机采样，或 KNN 采样，这样计算量小且中心点分布更均匀，覆盖性好。</p>
+<h2 id="Grouping"><a href="#Grouping" class="headerlink" title="Grouping"></a>Grouping</h2><p>至于分组方法，有两种办法：球查询和 KNN 分组。</p>
+<ul>
+<li><p>球查询（Query Ball）：设定一个欧氏空间的距离 r, 对于所有与中心点距离小于 r 的点，都归入这个中心点的组，这样适合点云密度均匀的情景，如果密度不均，可能出现一些组点数很少，一些组点数太多。</p>
+</li>
+<li><p>KNN 分组：与中心点最近的 k 个点归入这个中心点的组，这样保证每个组的半径一样。</p>
+</li>
+</ul>
+<p>在 PointNet++ 论文中，每一组的点云数量为 K，是一个固定值，这是先经过原始分组之后，若小于 K, 则利用 padding 方法补充，若大于 K, 则直接截断。</p>
+<p>采样分组之后就对每一个组运用 PointNet, 得到每个组的一个特征，再把这些特征视作点云（当然输入的维数增加了很多），重复采样-分组- PointNet 这个循环即可实现多层特征的提取。（论文中称之为 Sampling Layer - Grouping Layer - PointNet Layer） </p>
+<p>从形状上理解：输入为 $N<em>(d + C)$, d 为 3 , C 为原始特征（如法向量、RGB等），经过 Sampling Layer, 得到 $N’</em>(d+C)$, 经过 Grouping Layer, 得到 $N’<em>K</em>(d+C)$, 再经过 PointNet Layer, 得到 $N’*(d+C’)$ （$C’$ 为抽取的高维特征）。</p>
+<h2 id="MSG-MRG"><a href="#MSG-MRG" class="headerlink" title="MSG/MRG"></a>MSG/MRG</h2><p>在 Grouping Layer 中还有一个遗留问题，即对于密度非均匀的点云，Query Ball/KNN 都不能很好的处理，在稠密点云上抽取特征的方法可能不能很好地泛化到稀疏点云上。而实际上 LiDAR 传回的点云数据往往是非均匀的，距离近的位置点云稠密，距离远的位置点云稀疏。</p>
+<p>对此，作者提出了 Multi-scale grouping (MSG) 和 Multi-resolution grouping (MRG) 两种办法。MSG 就是在每一层都作不同大小的半径进行分组，然后经过 PointNet Layer 抽取的特征作 concat, 结果为总特征。</p>
+<p>然而 MSG 相当于每一个循环里的 Grouping 和 PointNet 都要重复很多次，且包含了在较低层级上对较大的半径作 PointNet, 这样的计算开销很大，因此，作者又提出了 MRG. 融合了不同层级的特征. </p>
+<p>MRG 思路如下：每一层的特征依然是两个特征的 concat, 第一个特征是这一层的子特征作 PointNet(left), 第二个特征是这一层的前一层的点直接作 PointNet(right). 在稀疏点云中，右侧的特征更可信，稠密点云中，左侧的特征更可信。把这两种不同的特征融合起来，可以使模型更适应不同密度的点云。</p>
+<p>下图中 (a) 是 MSG，(b) 是 MRG.</p>
+<p><img src="image-417.png" alt="alt text"></p>
+<p>PointNet++ 的整体流程图如下：</p>
+<p><img src="image-412.png" alt="alt text"></p>
+<p>论文中提到，这种分组方法相比于 CNN 的卷积核滑动的办法，能减少 overlap, 保证每个分组之间的独立性，效果更好。</p>
+
+    </div>
+
+    
+    
+    
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" rel="tag"># 计算机视觉</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2025/03/11/RL-6/" rel="prev" title="Reinforcement Learning-6: RL for Continuous Control">
+      <i class="fa fa-chevron-left"></i> Reinforcement Learning-6: RL for Continuous Control
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#3D-Vision-%E6%95%B0%E6%8D%AE%E8%A1%A8%E5%BE%81%E6%96%B9%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">3D Vision 数据表征方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Voxel"><span class="nav-number">1.1.</span> <span class="nav-text">Voxel</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Mesh"><span class="nav-number">1.2.</span> <span class="nav-text">Mesh</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#3D-CNN"><span class="nav-number">2.</span> <span class="nav-text">3D CNN</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PointNet"><span class="nav-number">3.</span> <span class="nav-text">PointNet</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#PointNet-1"><span class="nav-number">4.</span> <span class="nav-text">PointNet++</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Sampling"><span class="nav-number">4.1.</span> <span class="nav-text">Sampling</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Grouping"><span class="nav-number">4.2.</span> <span class="nav-text">Grouping</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MSG-MRG"><span class="nav-number">4.3.</span> <span class="nav-text">MSG&#x2F;MRG</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="HzmSailor"
+      src="/images/avatar.png">
+  <p class="site-author-name" itemprop="name">HzmSailor</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">12</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/Dasai-Hzm" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;Dasai-Hzm" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zimuhan276@gmail.com" title="E-Mail → mailto:zimuhan276@gmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://xjtu-ai.github.io/" title="http:&#x2F;&#x2F;xjtu-ai.github.io" rel="noopener" target="_blank">XJTU-AI学组</a>
+        </li>
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 
+  <span itemprop="copyrightYear">2025</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">HzmSailor</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+        
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+          load: ['[tex]/mhchem'],
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+          packages: {'[+]': ['mhchem']},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '[object Object]';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+
+</body>
+</html>
