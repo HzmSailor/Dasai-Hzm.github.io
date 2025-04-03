@@ -178,7 +178,7 @@ MathJax = {
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://dasai-hzm.github.io/2025/04/01/CameraModel/">
+    <link itemprop="mainEntityOfPage" href="https://dasai-hzm.github.io/2025/03/21/CameraModel/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -192,7 +192,7 @@ MathJax = {
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/04/01/CameraModel/" class="post-title-link" itemprop="url">未命名</a>
+            <a href="/2025/03/21/CameraModel/" class="post-title-link" itemprop="url">3D Vision: Camera Model and Calibration</a>
         </h2>
 
         <div class="post-meta">
@@ -202,7 +202,23 @@ MathJax = {
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2025-04-01 19:46:21" itemprop="dateCreated datePublished" datetime="2025-04-01T19:46:21+08:00">2025-04-01</time>
+              <time title="创建时间：2025-03-21 22:48:16" itemprop="dateCreated datePublished" datetime="2025-03-21T22:48:16+08:00">2025-03-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-04-03 22:17:25" itemprop="dateModified" datetime="2025-04-03T22:17:25+08:00">2025-04-03</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" itemprop="url" rel="index"><span itemprop="name">学习笔记</span></a>
+                </span>
             </span>
 
           
@@ -216,7 +232,51 @@ MathJax = {
     <div class="post-body" itemprop="articleBody">
 
       
-          
+          <h2 id="Camera-Imaging-Model"><a href="#Camera-Imaging-Model" class="headerlink" title="Camera Imaging Model"></a>Camera Imaging Model</h2><p>相机模型解释了如何从世界坐标系下的一个 3D 点映射到成像平面中的一个 2D 点。我们假设相机为线性模型（即相机是原始的小孔相机，显然不合理，但是先这样吧）。成像的过程如下图：</p>
+<p><img src="c9c8d8c89872d8682c367b8d9bd676a.png" alt="alt text"></p>
+<h2 id="Extrinsic-Parameters"><a href="#Extrinsic-Parameters" class="headerlink" title="Extrinsic Parameters"></a>Extrinsic Parameters</h2><p>首先要清楚相机相对于世界坐标下的位姿。这就用到了在机器人学里学的齐次坐标变换矩阵：<br>\[<br>T =<br>\begin{bmatrix}<br>r_{11} &amp; r_{12} &amp; r_{13} &amp; t_{x} \\<br>r_{21} &amp; r_{22} &amp; r_{23} &amp; t_{y} \\<br>r_{31} &amp; r_{32} &amp; r_{33} &amp; t_{z} \\<br>0 &amp; 0 &amp; 0 &amp; 1 \\<br>\end{bmatrix}<br>\]</p>
+<p>其中，<br>\[<br>R =<br>\begin{bmatrix}<br>r_{11} &amp; r_{12} &amp; r_{13}  \\<br>r_{21} &amp; r_{22} &amp; r_{23}  \\<br>r_{31} &amp; r_{32} &amp; r_{33}  \\<br>\end{bmatrix}<br>\]</p>
+<p>就是旋转矩阵，表示世界坐标轴在相机坐标中的位姿，而向量</p>
+<p>\[<br>t =<br>\begin{bmatrix}<br>t_{x}  \\<br>t_{y}  \\<br>t_{z}  \\<br>\end{bmatrix}<br>\]</p>
+<p>表示平移向量，即世界坐标原点在相机坐标中的位置。这样有了齐次坐标变换矩阵，我们就可以把世界坐标转换为相机坐标了。</p>
+<p>\[<br>\begin{bmatrix}<br>x_c \\<br>y_c \\<br>z_c \\<br>1<br>\end{bmatrix}<br>=\begin{bmatrix}<br>r_{11} &amp; r_{12} &amp; r_{13} &amp; t_{x} \\<br>r_{21} &amp; r_{22} &amp; r_{23} &amp; t_{y} \\<br>r_{31} &amp; r_{32} &amp; r_{33} &amp; t_{z} \\<br>0 &amp; 0 &amp; 0 &amp; 1 \\<br>\end{bmatrix}<br>\begin{bmatrix}<br>x_w \\<br>y_w \\<br>z_w \\<br>1<br>\end{bmatrix}<br>\]</p>
+<p>即：</p>
+<p>\[<br>\textbf{x}_c = M_{ext} \textbf{x}_w<br>\]</p>
+<p>而这个齐次坐标变换矩阵，被称为相机的外参矩阵。</p>
+<h2 id="Intrinsic-Parameters"><a href="#Intrinsic-Parameters" class="headerlink" title="Intrinsic Parameters"></a>Intrinsic Parameters</h2><p>相机的内参矩阵解决如何将相机坐标系下的 3D 点映射到成像平面的 2D 点，即 $(x_c, y_c, z_c) \rightarrow (u, v) $. 根据几何关系</p>
+<p>\[<br>\frac{z_c}{f} = \frac{x_c}{u}<br>\]</p>
+<p>\[<br>\frac{z_c}{f} = \frac{y_c}{v}<br>\]</p>
+<p>注意在相机坐标中，单位常选作 pixel （而非米）, 且坐标的原点常选在左上角，因此要对结果作缩放和平移：</p>
+<p>\[<br>u = m_x f \frac{x_c}{z_c} + o_x = f_x \frac{x_c}{z_c} + o_x<br>\]</p>
+<p>\[<br>u = m_y f \frac{y_c}{z_c} + o_y = f_y \frac{y_c}{z_c} + o_y<br>\]</p>
+<p>$(f_x, f_y, o_x, o_y)$ 被称为相机的内参。然而这个方程并非线性，难以用矩阵表示。因此我们采用了升维的办法（即齐次坐标）。</p>
+<p>\[<br>\begin{bmatrix}<br>u \\<br>v  \\<br>1  \\<br>\end{bmatrix}<br>= \begin{bmatrix}<br>\textbf{u} \\<br>\textbf{v}  \\<br>\textbf{w}  \\<br>\end{bmatrix}<br>= \begin{bmatrix}<br>f_x &amp; 0 &amp; o_x &amp; 0 \\<br>0 &amp; f_y &amp; o_y &amp; 0 \\<br>0 &amp; 0 &amp; 1 &amp; 0<br>\end{bmatrix}<br>\begin{bmatrix}<br>x_c \\<br>y_c \\<br>z_c \\<br>1<br>\end{bmatrix}<br>\]</p>
+<p>注意，这个矩阵乘出来最后一维不一定是1，这时候将齐次坐标缩放，将最后一维调为1. 这个矩阵称为相机的内参矩阵，记为 $M_{int}$。因此：</p>
+<p>\[<br>\textbf{u} = M_{int} \textbf{x}_c = M_{int} M_{ext} \textbf{x}_w = P \textbf{x}_w<br>\]</p>
+<p>即可实现从世界坐标到相机坐标的变换，$P = M_{int} M_{ext}$ 称为投影矩阵。</p>
+<h2 id="Camera-Calibration"><a href="#Camera-Calibration" class="headerlink" title="Camera Calibration"></a>Camera Calibration</h2><p>相机工作前，首先要进行内外参标定。观察$P = M_{int} M_{ext}$，可以发现内参矩阵为一个上三角阵，而外参矩阵是一个正交阵，因此给定投影矩阵 $P$, 我们可以利用 RQ 分解确定唯一的一组上三角阵与正交阵，使他们乘积为 $P$, 这样也就确定了所有的外参和内参。因此问题转化为如何确定投影矩阵 $P$.</p>
+<p>首先，我们找一个几何形状已知的物体，这样它在世界坐标系下的坐标和在相机坐标系下的坐标就都是已知的，如下：<br><img src="\images\image-431.png" alt="alt text"><br>把这个式子全部展开，换一种写法，写成：</p>
+<p>\[<br>\textbf{A} \textbf{p} = \textbf{0}<br>\]</p>
+<p>其中 $\textbf{A}, \textbf{p}$ 由下面给出：<br><img src="\images\image-432.png" alt="alt text"></p>
+<p>这就变成了求齐次线性方程组的解了，然而这显然有无穷多组解（且它们线性相关）。这对应着我们把物体放大一倍，且拉远一倍，所得到的像不变。或者从齐次坐标去理解，齐次坐标扩大 $k$ 倍，不影响实际的 $u, v$ 值，因为总是要归一化的。因此解此方程需要加上规范条件，有两种：</p>
+<p>\[<br>p_{34} = 1<br>\]</p>
+<p>或：</p>
+<p>\[<br>||\textbf{p}|| ^ 2 = 1<br>\]</p>
+<p>采用第二种规范，问题等价于这样的优化问题：</p>
+<p>\[<br>\min_{\textbf{p}} ||\textbf{Ap}|| ^ 2 \\<br>\mathrm{s.t.} ||\textbf{p}|| ^ 2 = 1 \\<br>\]</p>
+<p>等价于：</p>
+<p>\[<br>\min_{\textbf{p}} \textbf{p}^\textbf{T}\textbf{A}^\textbf{T} \textbf{Ap} \\<br>\mathrm{s.t.} \textbf{p}^\textbf{T}\textbf{p} = 1 \\<br>\]</p>
+<p>等价于优化这个损失函数：</p>
+<p>\[<br>L(\textbf{p}, \lambda) = \textbf{p}^\textbf{T}\textbf{A}^\textbf{T} \textbf{Ap} - \lambda (\textbf{p}^\textbf{T}\textbf{p} - 1)<br>\]</p>
+<p>使导数为0，得到：</p>
+<p>\[<br>\textbf{A}^\textbf{T} \textbf{Ap} = \lambda \textbf{p}<br>\]</p>
+<p>这就是一个求特征值的问题了，我们求得 $\textbf{A}^\textbf{T} \textbf{A}$ 的特征值后，找到最小的那个（这里有问题，不知道为啥最小的那个特征值对应着损失函数的极小值，这里没有给出证明，姑且先记住吧），然后求其特征向量，再将特征向量归一化，重新排布，就可以得到 $P$ 矩阵，再作 RQ 分解，即可确定相机的全部外参和内参。</p>
+<h2 id="Stereo-Matching"><a href="#Stereo-Matching" class="headerlink" title="Stereo Matching"></a>Stereo Matching</h2><p>相机标定完成后，我们想办法利用相机的二维图像重建三维世界，一种简单的想法是，拿同样一个相机，在平移前后拍两张照片，然后根据同一点在两张照片上的不同位置 (disparity) 推算出这一点的真实位置。原理如下：</p>
+<p><img src="\images\image-434.png" alt="alt text"></p>
+<p>直接根据小孔相机模型写出两种相机下某一点的坐标，然后假设内参和相机坐标系下的坐标已知，解算出真实世界中的坐标。</p>
+<p><img src="\images\image-435.png" alt="alt text"></p>
+<p>值得注意的是，$z$ 与 disparity 成反比，这也与我们的经验相符。比如手指放在双眼中间，当手指离眼睛比较远的时候，两眼看到的手指位置几乎一样，而当手指很贴近鼻子的时候，两眼看到的手指位置完全相反。因此，我们只要找到两张图片中同一个点，就能根据以上公式算出它的位置。</p>
+
       
     </div>
 
@@ -266,7 +326,7 @@ MathJax = {
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-04-01 19:46:47" itemprop="dateModified" datetime="2025-04-01T19:46:47+08:00">2025-04-01</time>
+                <time title="修改时间：2025-04-03 11:01:28" itemprop="dateModified" datetime="2025-04-03T11:01:28+08:00">2025-04-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
