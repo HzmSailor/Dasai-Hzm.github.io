@@ -209,7 +209,7 @@ MathJax = {
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-04-03 22:17:25" itemprop="dateModified" datetime="2025-04-03T22:17:25+08:00">2025-04-03</time>
+                <time title="修改时间：2025-04-03 22:31:01" itemprop="dateModified" datetime="2025-04-03T22:31:01+08:00">2025-04-03</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -233,7 +233,7 @@ MathJax = {
 
       
           <h2 id="Camera-Imaging-Model"><a href="#Camera-Imaging-Model" class="headerlink" title="Camera Imaging Model"></a>Camera Imaging Model</h2><p>相机模型解释了如何从世界坐标系下的一个 3D 点映射到成像平面中的一个 2D 点。我们假设相机为线性模型（即相机是原始的小孔相机，显然不合理，但是先这样吧）。成像的过程如下图：</p>
-<p><img src="c9c8d8c89872d8682c367b8d9bd676a.png" alt="alt text"></p>
+<p><img src="\images\c9c8d8c89872d8682c367b8d9bd676a.png" alt="alt text"></p>
 <h2 id="Extrinsic-Parameters"><a href="#Extrinsic-Parameters" class="headerlink" title="Extrinsic Parameters"></a>Extrinsic Parameters</h2><p>首先要清楚相机相对于世界坐标下的位姿。这就用到了在机器人学里学的齐次坐标变换矩阵：<br>\[<br>T =<br>\begin{bmatrix}<br>r_{11} &amp; r_{12} &amp; r_{13} &amp; t_{x} \\<br>r_{21} &amp; r_{22} &amp; r_{23} &amp; t_{y} \\<br>r_{31} &amp; r_{32} &amp; r_{33} &amp; t_{z} \\<br>0 &amp; 0 &amp; 0 &amp; 1 \\<br>\end{bmatrix}<br>\]</p>
 <p>其中，<br>\[<br>R =<br>\begin{bmatrix}<br>r_{11} &amp; r_{12} &amp; r_{13}  \\<br>r_{21} &amp; r_{22} &amp; r_{23}  \\<br>r_{31} &amp; r_{32} &amp; r_{33}  \\<br>\end{bmatrix}<br>\]</p>
 <p>就是旋转矩阵，表示世界坐标轴在相机坐标中的位姿，而向量</p>
