@@ -32,27 +32,24 @@ MathJax = {
     var CONFIG = {"hostname":"dasai-hzm.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="Camera Imaging Model相机模型解释了如何从世界坐标系下的一个 3D 点映射到成像平面中的一个 2D 点。我们假设相机为线性模型（即相机是原始的小孔相机，显然不合理，但是先这样吧）。成像的过程如下图：  Extrinsic Parameters首先要清楚相机相对于世界坐标下的位姿。这就用到了在机器人学里学的齐次坐标变换矩阵：\[T &#x3D;\begin{bmatrix}r_{11} &amp;a">
+  <meta name="description" content="TransformerTransformer 架构由 Google 在 NIPS 2017 提出，之后成为各种大模型的基础架构。一个完整的 Transformer 由 Encoder 和 Decoder 组成，整个架构图如下： EncoderInput Embedding由于 Transformer 最早应用于机器翻译领域，这里以机器翻译为示例。输入是一长段文本，首先要进行 tokenize, 就">
 <meta property="og:type" content="article">
-<meta property="og:title" content="3D Vision: Camera Model and Calibration">
-<meta property="og:url" content="https://dasai-hzm.github.io/2025/03/21/CameraModel/index.html">
+<meta property="og:title" content="Deep Learning: Transformer and Vision Transformer">
+<meta property="og:url" content="https://dasai-hzm.github.io/2025/04/04/Transformer/index.html">
 <meta property="og:site_name" content="HzmSailor&#39;s Learning Blog">
-<meta property="og:description" content="Camera Imaging Model相机模型解释了如何从世界坐标系下的一个 3D 点映射到成像平面中的一个 2D 点。我们假设相机为线性模型（即相机是原始的小孔相机，显然不合理，但是先这样吧）。成像的过程如下图：  Extrinsic Parameters首先要清楚相机相对于世界坐标下的位姿。这就用到了在机器人学里学的齐次坐标变换矩阵：\[T &#x3D;\begin{bmatrix}r_{11} &amp;a">
+<meta property="og:description" content="TransformerTransformer 架构由 Google 在 NIPS 2017 提出，之后成为各种大模型的基础架构。一个完整的 Transformer 由 Encoder 和 Decoder 组成，整个架构图如下： EncoderInput Embedding由于 Transformer 最早应用于机器翻译领域，这里以机器翻译为示例。输入是一长段文本，首先要进行 tokenize, 就">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://dasai-hzm.github.io/images/c9c8d8c89872d8682c367b8d9bd676a.png">
-<meta property="og:image" content="https://dasai-hzm.github.io/images/image-431.png">
-<meta property="og:image" content="https://dasai-hzm.github.io/images/image-432.png">
-<meta property="og:image" content="https://dasai-hzm.github.io/images/image-434.png">
-<meta property="og:image" content="https://dasai-hzm.github.io/images/image-435.png">
-<meta property="og:image" content="https://dasai-hzm.github.io/images/image-439.png">
-<meta property="article:published_time" content="2025-03-21T14:48:16.000Z">
-<meta property="article:modified_time" content="2025-04-03T14:41:56.770Z">
+<meta property="og:image" content="https://dasai-hzm.github.io/2025/04/04/Transformer/image-1.png">
+<meta property="og:image" content="https://dasai-hzm.github.io/2025/04/04/Transformer/image-2.png">
+<meta property="article:published_time" content="2025-04-04T14:48:16.000Z">
+<meta property="article:modified_time" content="2025-04-04T14:10:09.097Z">
 <meta property="article:author" content="HzmSailor">
 <meta property="article:tag" content="计算机视觉">
+<meta property="article:tag" content="深度学习">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://dasai-hzm.github.io/images/c9c8d8c89872d8682c367b8d9bd676a.png">
+<meta name="twitter:image" content="https://dasai-hzm.github.io/2025/04/04/Transformer/image-1.png">
 
-<link rel="canonical" href="https://dasai-hzm.github.io/2025/03/21/CameraModel/">
+<link rel="canonical" href="https://dasai-hzm.github.io/2025/04/04/Transformer/">
 
 
 <script id="page-configurations">
@@ -65,7 +62,7 @@ MathJax = {
   };
 </script>
 
-  <title>3D Vision: Camera Model and Calibration | HzmSailor's Learning Blog</title>
+  <title>Deep Learning: Transformer and Vision Transformer | HzmSailor's Learning Blog</title>
   
 
 
@@ -191,7 +188,7 @@ MathJax = {
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://dasai-hzm.github.io/2025/03/21/CameraModel/">
+    <link itemprop="mainEntityOfPage" href="https://dasai-hzm.github.io/2025/04/04/Transformer/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.png">
@@ -204,7 +201,7 @@ MathJax = {
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          3D Vision: Camera Model and Calibration
+          Deep Learning: Transformer and Vision Transformer
         </h1>
 
         <div class="post-meta">
@@ -213,16 +210,10 @@ MathJax = {
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2025-03-21 22:48:16" itemprop="dateCreated datePublished" datetime="2025-03-21T22:48:16+08:00">2025-03-21</time>
+              <time title="创建时间：2025-04-04 22:48:16 / 修改时间：22:10:09" itemprop="dateCreated datePublished" datetime="2025-04-04T22:48:16+08:00">2025-04-04</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2025-04-03 22:41:56" itemprop="dateModified" datetime="2025-04-03T22:41:56+08:00">2025-04-03</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -244,59 +235,53 @@ MathJax = {
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="Camera-Imaging-Model"><a href="#Camera-Imaging-Model" class="headerlink" title="Camera Imaging Model"></a>Camera Imaging Model</h2><p>相机模型解释了如何从世界坐标系下的一个 3D 点映射到成像平面中的一个 2D 点。我们假设相机为线性模型（即相机是原始的小孔相机，显然不合理，但是先这样吧）。成像的过程如下图：</p>
-<p><img src="\images\c9c8d8c89872d8682c367b8d9bd676a.png" alt="alt text"></p>
-<h2 id="Extrinsic-Parameters"><a href="#Extrinsic-Parameters" class="headerlink" title="Extrinsic Parameters"></a>Extrinsic Parameters</h2><p>首先要清楚相机相对于世界坐标下的位姿。这就用到了在机器人学里学的齐次坐标变换矩阵：<br>\[<br>T =<br>\begin{bmatrix}<br>r_{11} &amp; r_{12} &amp; r_{13} &amp; t_{x} \\<br>r_{21} &amp; r_{22} &amp; r_{23} &amp; t_{y} \\<br>r_{31} &amp; r_{32} &amp; r_{33} &amp; t_{z} \\<br>0 &amp; 0 &amp; 0 &amp; 1 \\<br>\end{bmatrix}<br>\]</p>
-<p>其中，<br>\[<br>R =<br>\begin{bmatrix}<br>r_{11} &amp; r_{12} &amp; r_{13}  \\<br>r_{21} &amp; r_{22} &amp; r_{23}  \\<br>r_{31} &amp; r_{32} &amp; r_{33}  \\<br>\end{bmatrix}<br>\]</p>
-<p>就是旋转矩阵，表示世界坐标轴在相机坐标中的位姿，而向量</p>
-<p>\[<br>t =<br>\begin{bmatrix}<br>t_{x}  \\<br>t_{y}  \\<br>t_{z}  \\<br>\end{bmatrix}<br>\]</p>
-<p>表示平移向量，即世界坐标原点在相机坐标中的位置。这样有了齐次坐标变换矩阵，我们就可以把世界坐标转换为相机坐标了。</p>
-<p>\[<br>\begin{bmatrix}<br>x_c \\<br>y_c \\<br>z_c \\<br>1<br>\end{bmatrix}<br>=\begin{bmatrix}<br>r_{11} &amp; r_{12} &amp; r_{13} &amp; t_{x} \\<br>r_{21} &amp; r_{22} &amp; r_{23} &amp; t_{y} \\<br>r_{31} &amp; r_{32} &amp; r_{33} &amp; t_{z} \\<br>0 &amp; 0 &amp; 0 &amp; 1 \\<br>\end{bmatrix}<br>\begin{bmatrix}<br>x_w \\<br>y_w \\<br>z_w \\<br>1<br>\end{bmatrix}<br>\]</p>
-<p>即：</p>
-<p>\[<br>\textbf{x}_c = M_{ext} \textbf{x}_w<br>\]</p>
-<p>而这个齐次坐标变换矩阵，被称为相机的外参矩阵。</p>
-<h2 id="Intrinsic-Parameters"><a href="#Intrinsic-Parameters" class="headerlink" title="Intrinsic Parameters"></a>Intrinsic Parameters</h2><p>相机的内参矩阵解决如何将相机坐标系下的 3D 点映射到成像平面的 2D 点，即 $(x_c, y_c, z_c) \rightarrow (u, v) $. 根据几何关系</p>
-<p>\[<br>\frac{z_c}{f} = \frac{x_c}{u}<br>\]</p>
-<p>\[<br>\frac{z_c}{f} = \frac{y_c}{v}<br>\]</p>
-<p>注意在相机坐标中，单位常选作 pixel （而非米）, 且坐标的原点常选在左上角，因此要对结果作缩放和平移：</p>
-<p>\[<br>u = m_x f \frac{x_c}{z_c} + o_x = f_x \frac{x_c}{z_c} + o_x<br>\]</p>
-<p>\[<br>u = m_y f \frac{y_c}{z_c} + o_y = f_y \frac{y_c}{z_c} + o_y<br>\]</p>
-<p>$(f_x, f_y, o_x, o_y)$ 被称为相机的内参。然而这个方程并非线性，难以用矩阵表示。因此我们采用了升维的办法（即齐次坐标）。</p>
-<p>\[<br>\begin{bmatrix}<br>u \\<br>v  \\<br>1  \\<br>\end{bmatrix}<br>= \begin{bmatrix}<br>\textbf{u} \\<br>\textbf{v}  \\<br>\textbf{w}  \\<br>\end{bmatrix}<br>= \begin{bmatrix}<br>f_x &amp; 0 &amp; o_x &amp; 0 \\<br>0 &amp; f_y &amp; o_y &amp; 0 \\<br>0 &amp; 0 &amp; 1 &amp; 0<br>\end{bmatrix}<br>\begin{bmatrix}<br>x_c \\<br>y_c \\<br>z_c \\<br>1<br>\end{bmatrix}<br>\]</p>
-<p>注意，这个矩阵乘出来最后一维不一定是1，这时候将齐次坐标缩放，将最后一维调为1. 这个矩阵称为相机的内参矩阵，记为 $M_{int}$。因此：</p>
-<p>\[<br>\textbf{u} = M_{int} \textbf{x}_c = M_{int} M_{ext} \textbf{x}_w = P \textbf{x}_w<br>\]</p>
-<p>即可实现从世界坐标到相机坐标的变换，$P = M_{int} M_{ext}$ 称为投影矩阵。</p>
-<h2 id="Camera-Calibration"><a href="#Camera-Calibration" class="headerlink" title="Camera Calibration"></a>Camera Calibration</h2><p>相机工作前，首先要进行内外参标定。观察$P = M_{int} M_{ext}$，可以发现内参矩阵为一个上三角阵，而外参矩阵是一个正交阵，因此给定投影矩阵 $P$, 我们可以利用 RQ 分解确定唯一的一组上三角阵与正交阵，使他们乘积为 $P$, 这样也就确定了所有的外参和内参。因此问题转化为如何确定投影矩阵 $P$.</p>
-<p>首先，我们找一个几何形状已知的物体，这样它在世界坐标系下的坐标和在相机坐标系下的坐标就都是已知的，如下：<br><img src="\images\image-431.png" alt="alt text"><br>把这个式子全部展开，换一种写法，写成：</p>
-<p>\[<br>\textbf{A} \textbf{p} = \textbf{0}<br>\]</p>
-<p>其中 $\textbf{A}, \textbf{p}$ 由下面给出：<br><img src="\images\image-432.png" alt="alt text"></p>
-<p>这就变成了求齐次线性方程组的解了，然而这显然有无穷多组解（且它们线性相关）。这对应着我们把物体放大一倍，且拉远一倍，所得到的像不变。或者从齐次坐标去理解，齐次坐标扩大 $k$ 倍，不影响实际的 $u, v$ 值，因为总是要归一化的。因此解此方程需要加上规范条件，有两种：</p>
-<p>\[<br>p_{34} = 1<br>\]</p>
-<p>或：</p>
-<p>\[<br>||\textbf{p}|| ^ 2 = 1<br>\]</p>
-<p>采用第二种规范，问题等价于这样的优化问题：</p>
-<p>\[<br>\min_{\textbf{p}} ||\textbf{Ap}|| ^ 2 \\<br>\mathrm{s.t.} ||\textbf{p}|| ^ 2 = 1 \\<br>\]</p>
-<p>等价于：</p>
-<p>\[<br>\min_{\textbf{p}} \textbf{p}^\textbf{T}\textbf{A}^\textbf{T} \textbf{Ap} \\<br>\mathrm{s.t.} \textbf{p}^\textbf{T}\textbf{p} = 1 \\<br>\]</p>
-<p>等价于优化这个损失函数：</p>
-<p>\[<br>L(\textbf{p}, \lambda) = \textbf{p}^\textbf{T}\textbf{A}^\textbf{T} \textbf{Ap} - \lambda (\textbf{p}^\textbf{T}\textbf{p} - 1)<br>\]</p>
-<p>使导数为0，得到：</p>
-<p>\[<br>\textbf{A}^\textbf{T} \textbf{Ap} = \lambda \textbf{p}<br>\]</p>
-<p>这就是一个求特征值的问题了，我们求得 $\textbf{A}^\textbf{T} \textbf{A}$ 的特征值后，找到最小的那个（这里有问题，不知道为啥最小的那个特征值对应着损失函数的极小值，这里没有给出证明，姑且先记住吧），然后求其特征向量，再将特征向量归一化，重新排布，就可以得到 $P$ 矩阵，再作 RQ 分解，即可确定相机的全部外参和内参。</p>
-<h2 id="Stereo-Matching"><a href="#Stereo-Matching" class="headerlink" title="Stereo Matching"></a>Stereo Matching</h2><p>相机标定完成后，我们想办法利用相机的二维图像重建三维世界，一种简单的想法是，拿同样一个相机，在平移前后拍两张照片，然后根据同一点在两张照片上的不同位置 (disparity) 推算出这一点的真实位置。原理如下：</p>
-<p><img src="\images\image-434.png" alt="alt text"></p>
-<p>直接根据小孔相机模型写出两种相机下某一点的坐标，然后假设内参和相机坐标系下的坐标已知，解算出真实世界中的坐标。</p>
-<p><img src="\images\image-435.png" alt="alt text"></p>
-<p>值得注意的是，$z$ 与 disparity 成反比，这也与我们的经验相符。比如手指放在双眼中间，当手指离眼睛比较远的时候，两眼看到的手指位置几乎一样，而当手指很贴近鼻子的时候，两眼看到的手指位置完全相反。因此，我们只要找到两张图片中同一个点，就能根据以上公式算出它的位置。找到这两个点的过程被称为 stereo matching. 有以下几点细节：</p>
-<ol>
-<li><p>由于$v_r$ 与 $v_l$ 一样，所以两张照片上相同的点必然纵坐标相同，因此只用扫描横着的一排区域即可。</p>
+        <h2 id="Transformer"><a href="#Transformer" class="headerlink" title="Transformer"></a>Transformer</h2><p>Transformer 架构由 Google 在 NIPS 2017 提出，之后成为各种大模型的基础架构。一个完整的 Transformer 由 Encoder 和 Decoder 组成，整个架构图如下：<br><img src="image-1.png" alt="alt text"></p>
+<h3 id="Encoder"><a href="#Encoder" class="headerlink" title="Encoder"></a>Encoder</h3><h4 id="Input-Embedding"><a href="#Input-Embedding" class="headerlink" title="Input Embedding"></a>Input Embedding</h4><p>由于 Transformer 最早应用于机器翻译领域，这里以机器翻译为示例。输入是一长段文本，首先要进行 tokenize, 就是把一长串文本化为 token, 每一个 token 可能是一个单词，也可能长于一个单词（如固定搭配表示特殊的语义），也可能短于一个单词（如词根词缀也能表示一定的独立语义）。</p>
+<p>Tokenize 之后，要对 token 进行 embedding, 就是把 token 映射到向量。这一步可以基于一个词表做，例如 Word2Vec. 不过训练较为复杂的模型时，初始的 embedding 词表其实并不重要，随机初始化的效果与基于 Word2Vec 的效果差别不大。</p>
+<h4 id="Positional-Embedding"><a href="#Positional-Embedding" class="headerlink" title="Positional Embedding"></a>Positional Embedding</h4><p>由于 Transformer 是把一串文本打散了之后输入，这样就会丢失某一个词在原始序列中的位置信息，因此在 Input Embedding 之后要做一步 Positional Embedding, 把初始的位置信息融入到嵌入向量中。具体公式如下：t 就是 token 在序列中的位置，i 表示 Positional Embedding 的第 i 维，H 表示 Embedding 的维数。</p>
+<p><img src="image-2.png" alt="alt text"></p>
+<p>这样生成 Positional Embedding $p_k$ 与 Input Embedding $v_t$ 直接相加，得到总的 Embedding $x_t$. 这样输入从文本就转为一个矩阵 $x = [x_1, x_2,…, x_n]^T $.</p>
+<h4 id="Residual-Connection"><a href="#Residual-Connection" class="headerlink" title="Residual Connection"></a>Residual Connection</h4><p>残差连接，就是把这一层的输出再加上这一层的输入。它旨在缓解梯度消失的问题，使得信息直接跨模块传递。</p>
+<p>在梯度反向传播时，对于某一层的参数的偏导数，由于链式法则，是一系列偏导的乘积。连乘容易出现数值很小的情况，从而使参数更新缓慢，这一现象就是梯度消失。有了残差，求偏导就会多一个 1, 这样就避免了数值接近 0 的情况。</p>
+<h4 id="Normalization"><a href="#Normalization" class="headerlink" title="Normalization"></a>Normalization</h4><p>归一化的方法有很多，常见的有 BatchNorm, LayerNorm, RMSNorm, DeepNorm. </p>
+<ul>
+<li>BatchNorm (BN): 批次归一化，对于每次训练的 Batch，求得每一个维度的均值和标准差，进行缩放。然而对于小批量数据，这种用一个 Batch 的均值和标准差作为整体标准进行处理很容易误差较大，效果不好（NLP 任务中并不常用）。<script type="math/tex; mode=display">
+BatchNorm(x_i) = \frac{x_i - \mu_i}{\sigma_i} \cdot \gamma_i + \beta_i</script></li>
+</ul>
+<script type="math/tex; mode=display">
+\mu_i = \frac{\sum_j x_i^{(j)}}{BatchSize}, \sigma = \sqrt{\frac{\sum_j (x_i^{(j)} - \mu_i)^2}{BatchSize}}</script><ul>
+<li>LayerNorm (LN): 层归一化，对于每一个数据，求其所有维度数据的均值和方差进行缩放。这样每一个数据的缩放仅与自己有关，解决了 BN 在小样本上效果不佳的问题。</li>
+</ul>
+<script type="math/tex; mode=display">
+LayerNorm(x) = \frac{x - \mu}{\sigma} \cdot \gamma + \beta</script><script type="math/tex; mode=display">
+\mu = \frac{\sum x_i}{H}, \sigma = \sqrt{\frac{\sum (x_i - \mu)^2}{H}}</script><ul>
+<li>RMSNorm: RMS 归一化，可以看作是 Layer Norm 的变种，主要针对于 LN 要计算均值和标准差，计算量较大的问题。RMSNorm 直接令样本中每一个维度除以样本所有维度的方均值再缩放，RMSNorm 训练的速度和效果都比 LayerNorm 要好。</li>
+</ul>
+<script type="math/tex; mode=display">
+RMSNorm(x) = \frac{x}{\sqrt{\sum x_i^2} } \cdot \gamma</script><ul>
+<li><p>DeepNorm: 深度归一化，是一种 Post-Norm 方法，其实就是在残差连接中对之前的激活值 x 进行了缩放，残差计算之后再用 LayerNorm. MicroSoft 的研究人员发现这样的归一化可以使 Transformer 的训练更稳定，训练 1000 层以上的神经网络不再困难。</p>
+<script type="math/tex; mode=display">
+DeepNorm(x) = LayerNorm( \alpha x + Sublayer(x))</script></li>
+</ul>
+<p>注：可以发现在 BN, LN, RMSNorm 中都有一些 learnable 参数（如 $\gamma, \beta$），这可以调整归一化的强度，未必彻底的归一化才适合。特别的，当 $\gamma = \sigma$, $\beta = \mu$ 时，相当于并没有归一化。</p>
+<p>归一化的位置也有很多种不同的选择，总结如下，其中每种归一化的优劣引用了《大语言模型》（赵鑫等）的总结：</p>
+<ul>
+<li><p>Post-Norm: 后向归一化，最原始的Transformer中选择的是 Post-Norm，即一个 Sublayer(如 Attention, FeedForward) 之后做残差计算，残差之后再做归一化。</p>
+<script type="math/tex; mode=display">
+PostNorm(x) = Norm(x + Sublayer(x))</script><p>“在原理上，后向归一化具有很多优势。首先，有助于加快神经网络的训练收敛速度，使模型可以更有效地传播梯度，从而减少训练时间。其次，后向归一化可以降低神经网络对于超参数（如学习率、初始化参数等）的敏感性，使得网络更容易调优，并减少了超参数调整的难度。然而，由于在输出层附近存在梯度较大的问题，采用 Post-Norm 的 Transformer 模型在训练过程中通常会出现不稳定的现象。”</p>
 </li>
-<li><p>Stereo matching 匹配并不是一个点，而是一个区域，区域的大小选择是一个要调的参数，区域太大了，那么确定点的过程误差较大，区域太小了，匹配的准确性不好，有很多区域可能算出来差别都很小。</p>
+<li><p>Pre-Norm: 前向归一化，对 Sublayer 的输入做归一化，之后再过 Sublayer 层，算残差。</p>
+<script type="math/tex; mode=display">
+PreNorm(x) = x + Sublayer(Norm(x))</script><p>“相较于 Post-Norm，Pre-Norm 直接把每个子层加在了归一化模块之后，仅仅对输入的表示进行了归一化，从而可以防止模型的梯度爆炸或者梯度消失现象。虽然使用了 Pre-Norm 的 Transformer 模型在训练过程中更加稳定，但是性能却逊色于采用了 Post-Norm 的模型。”</p>
 </li>
-<li><p>计算区域与区域的差别就是单点的差别再对区域求和，常见的几种差别计算方法如下：</p>
-</li>
-</ol>
-<p><img src="\images\image-439.png" alt="alt text"></p>
+<li><p>Sandwich-Norm: 三明治归一化，就是 Pre-Norm 和 Post-Norm 的结合，虽然想法比较理想，从理论上应该性能更好，但是实际中研究人员发现这种办法并不能使训练完全稳定，有时候甚至会崩溃。</p>
+<script type="math/tex; mode=display">
+SandwichNorm(x) = x + Norm(Sublayer(Norm(x)))</script></li>
+</ul>
+<h4 id="Feed-Forward-Neural-Network"><a href="#Feed-Forward-Neural-Network" class="headerlink" title="Feed Forward Neural Network"></a>Feed Forward Neural Network</h4><p>前馈神经网络，就是信息流动始终由前一层流向后一层，各层间信息没有反馈。比如 CNN, MLP 都属于前馈神经网络，而 RNN 不是。原始的 Transformer 这里用的是两层神经网络（两层的 MLP）。</p>
+<h4 id="Attention"><a href="#Attention" class="headerlink" title="Attention"></a>Attention</h4><p>未完待续。</p>
+<h2 id="Vision-Transformer"><a href="#Vision-Transformer" class="headerlink" title="Vision Transformer"></a>Vision Transformer</h2><p>Vision Transformer 旨在直接利用 Transformer 处理计算机视觉的任务，而不依赖于传统的 CNN。ViT 的主要思想是把一张图片打成 patch, 每一个 patch 相当于 NLP 任务中的一个 token. 这样就直接照搬 Transformer 中的 embedding, positional encoding, attention 等模块处理。</p>
+<p>未完待续。</p>
 
     </div>
 
@@ -307,6 +292,7 @@ MathJax = {
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E8%A7%86%E8%A7%89/" rel="tag"># 计算机视觉</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"># 深度学习</a>
           </div>
 
         
@@ -315,13 +301,10 @@ MathJax = {
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2025/03/21/PointNet/" rel="prev" title="3D Vision: 3D CNN, PointNet and PointNet++">
-      <i class="fa fa-chevron-left"></i> 3D Vision: 3D CNN, PointNet and PointNet++
+    <a href="/2025/03/21/CameraModel/" rel="prev" title="3D Vision: Camera Model and Calibration">
+      <i class="fa fa-chevron-left"></i> 3D Vision: Camera Model and Calibration
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2025/04/04/Transformer/" rel="next" title="Deep Learning: Transformer and Vision Transformer">
-      Deep Learning: Transformer and Vision Transformer <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -380,7 +363,7 @@ MathJax = {
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Camera-Imaging-Model"><span class="nav-number">1.</span> <span class="nav-text">Camera Imaging Model</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Extrinsic-Parameters"><span class="nav-number">2.</span> <span class="nav-text">Extrinsic Parameters</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Intrinsic-Parameters"><span class="nav-number">3.</span> <span class="nav-text">Intrinsic Parameters</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Camera-Calibration"><span class="nav-number">4.</span> <span class="nav-text">Camera Calibration</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Stereo-Matching"><span class="nav-number">5.</span> <span class="nav-text">Stereo Matching</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Transformer"><span class="nav-number">1.</span> <span class="nav-text">Transformer</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Encoder"><span class="nav-number">1.1.</span> <span class="nav-text">Encoder</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Input-Embedding"><span class="nav-number">1.1.1.</span> <span class="nav-text">Input Embedding</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Positional-Embedding"><span class="nav-number">1.1.2.</span> <span class="nav-text">Positional Embedding</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Residual-Connection"><span class="nav-number">1.1.3.</span> <span class="nav-text">Residual Connection</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Normalization"><span class="nav-number">1.1.4.</span> <span class="nav-text">Normalization</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Feed-Forward-Neural-Network"><span class="nav-number">1.1.5.</span> <span class="nav-text">Feed Forward Neural Network</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Attention"><span class="nav-number">1.1.6.</span> <span class="nav-text">Attention</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Vision-Transformer"><span class="nav-number">2.</span> <span class="nav-text">Vision Transformer</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
