@@ -29,7 +29,7 @@ MathJax = {
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"dasai-hzm.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"dasai-hzm.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta property="og:type" content="website">
@@ -126,11 +126,6 @@ MathJax = {
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
-        <li class="menu-item menu-item-about">
-
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
-
-  </li>
         <li class="menu-item menu-item-tags">
 
     <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
@@ -144,11 +139,6 @@ MathJax = {
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
-
-  </li>
-        <li class="menu-item menu-item-sitemap">
-
-    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
 
   </li>
   </ul>
@@ -174,6 +164,256 @@ MathJax = {
 
           <div class="content index posts-expand">
             
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://dasai-hzm.github.io/2025/02/09/CLIPBasedAudioProcessingSystem/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="HzmSailor">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HzmSailor's Learning Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/09/CLIPBasedAudioProcessingSystem/" class="post-title-link" itemprop="url">一种基于CLIP模型的智能视频帧匹配系统</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+              
+
+              <time title="创建时间：2025-02-09 14:22:35 / 修改时间：14:23:15" itemprop="dateCreated datePublished" datetime="2025-02-09T14:22:35+08:00">2025-02-09</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="项目背景"><a href="#项目背景" class="headerlink" title="项目背景"></a>项目背景</h2><p>在视频内容分析领域，我们常常需要从长视频中快速定位特定场景或画面。传统方法依赖于人工逐帧查看或基于元数据的简单搜索，效率低下且无法应对复杂语义查询。CLIP（Contrastive Language-Image Pretraining）模型的出现为这一领域带来了新的可能性，它能够理解图像与文本之间的语义关联。</p>
+<p>笔者基于HuggingFace的CLIP模型开发了智能视频帧匹配系统，该系统可实现：</p>
+<ol>
+<li><strong>自动解析视频文件</strong>（支持MP4/AVI/MOV等常见格式）</li>
+<li><strong>实时计算文本描述与视频帧的语义相似度</strong></li>
+<li><strong>智能定位最佳匹配帧并支持可视化预览</strong></li>
+<li><strong>一键保存关键帧为JPG图片</strong></li>
+</ol>
+<h2 id="开发思路"><a href="#开发思路" class="headerlink" title="开发思路"></a>开发思路</h2><h3 id="本地模型加载模块"><a href="#本地模型加载模块" class="headerlink" title="本地模型加载模块"></a>本地模型加载模块</h3><p>考虑到实际部署时的网络稳定性问题，系统采用本地化模型加载方案：</p>
+<ul>
+<li><strong>使用<code>transformers</code>库加载预训练的CLIP模型</strong>（clip-vit-base-patch32）</li>
+<li><strong>设置本地模型缓存路径</strong>（E:\clip），包含完整的模型文件：<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LOCAL_MODEL_DIR = <span class="string">r&quot;E:\clip&quot;</span></span><br><span class="line">model = CLIPModel.from_pretrained(<span class="string">&quot;openai/clip-vit-base-patch32&quot;</span>).to(device)</span><br></pre></td></tr></table></figure></li>
+<li><strong>异常处理机制</strong>：模型加载失败时，提示缺失文件清单</li>
+</ul>
+<h3 id="多模态编码模块"><a href="#多模态编码模块" class="headerlink" title="多模态编码模块"></a>多模态编码模块</h3><h4 id="文本编码"><a href="#文本编码" class="headerlink" title="文本编码"></a><strong>文本编码</strong></h4><p>文本编码是将用户输入的英文描述转化为高维语义向量的过程。CLIP模型使用Transformer架构对文本进行编码，具体步骤如下：</p>
+<ul>
+<li><strong>文本预处理</strong>：将用户输入的英文描述（如 “a waitress standing in front of a restaurant”）进行分词和标准化处理。</li>
+<li><strong>Tokenization</strong>：将文本转换为模型可理解的Token序列，每个Token对应一个唯一的ID。</li>
+<li><strong>特征提取</strong>：通过多层Transformer编码器，将Token序列映射为固定长度的语义向量（本项目中维数为512）。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">inputs = processor(text=texts, return_tensors=<span class="string">&quot;pt&quot;</span>, padding=<span class="literal">True</span>).to(device)</span><br><span class="line">text_features = model.get_text_features(**inputs)</span><br></pre></td></tr></table></figure>
+<h4 id="图像编码"><a href="#图像编码" class="headerlink" title="图像编码"></a><strong>图像编码</strong></h4><p>图像编码是将视频帧转化为视觉特征向量的过程。CLIP模型使用Vision Transformer（ViT）架构对图像进行编码，具体步骤如下：</p>
+<ul>
+<li><strong>图像预处理</strong>：将视频帧从BGR格式转换为RGB格式，并调整大小为模型输入要求。</li>
+<li><strong>分块处理</strong>：将图像划分为多个小块（Patch），每个小块作为一个输入单元。</li>
+<li><strong>特征提取</strong>：通过多层Transformer编码器，将图像块序列映射为固定长度的视觉特征向量（本项目中维数为512）。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">inputs = processor(images=[pil_image], return_tensors=<span class="string">&quot;pt&quot;</span>, padding=<span class="literal">True</span>).to(device)</span><br><span class="line">image_features = model.get_image_features(**inputs)</span><br></pre></td></tr></table></figure>
+<h4 id="相似度计算"><a href="#相似度计算" class="headerlink" title="相似度计算"></a>相似度计算</h4><p>相似度是衡量文本描述与视频帧之间语义匹配程度的关键步骤。CLIP模型通过以下方式实现：</p>
+<ul>
+<li><strong>向量对齐</strong>：将文本特征向量和图像特征向量映射到同一语义空间。</li>
+<li><strong>余弦相似度</strong>：计算两个向量的余弦相似度，公式如下：<br><img src="/images/image-9.png" alt="alt text"></li>
+<li><strong>匹配分数</strong>：相似度值范围在[-1, 1]之间，值越接近1表示匹配度越高。</li>
+</ul>
+<h2 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> PIL <span class="keyword">import</span> Image</span><br><span class="line"><span class="keyword">import</span> cv2</span><br><span class="line"><span class="keyword">from</span> transformers <span class="keyword">import</span> CLIPModel, CLIPProcessor</span><br><span class="line"></span><br><span class="line">LOCAL_MODEL_DIR = <span class="built_in">input</span>(<span class="string">&quot;请输入你的CLIP模型路径：&quot;</span>)</span><br><span class="line"></span><br><span class="line">device = <span class="string">&quot;cuda&quot;</span> <span class="keyword">if</span> torch.cuda.is_available() <span class="keyword">else</span> <span class="string">&quot;cpu&quot;</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">f&quot;Using device: <span class="subst">&#123;device&#125;</span>&quot;</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">try</span>:</span><br><span class="line">    model = CLIPModel.from_pretrained(<span class="string">&quot;openai/clip-vit-base-patch32&quot;</span>).to(device)</span><br><span class="line">    processor = CLIPProcessor.from_pretrained(<span class="string">&quot;openai/clip-vit-base-patch32&quot;</span>)</span><br><span class="line"><span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;加载模型失败，请检查本地文件是否完整: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line">    <span class="built_in">print</span>(</span><br><span class="line">        <span class="string">&quot;必须包含以下文件: config.json, pytorch_model.bin, preprocessor_config.json, tokenizer_config.json, vocab.json, merges.txt&quot;</span>)</span><br><span class="line">    exit()</span><br><span class="line"></span><br><span class="line">video_path = <span class="built_in">input</span>(<span class="string">&quot;请输入你的视频文件路径：&quot;</span>)</span><br><span class="line">output_frame_path =<span class="built_in">input</span>(<span class="string">&quot;请输入你的最佳匹配帧保存路径：&quot;</span>)  </span><br><span class="line"></span><br><span class="line">user_text = <span class="built_in">input</span>(<span class="string">&quot;请输入一段英文描述（例如：a waitress standing in front of a restaurant）：&quot;</span>)</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> user_text.strip():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;输入不能为空！&quot;</span>)</span><br><span class="line">    exit()</span><br><span class="line"></span><br><span class="line">texts = [user_text]</span><br><span class="line"></span><br><span class="line">cap = cv2.VideoCapture(video_path)</span><br><span class="line"><span class="keyword">if</span> <span class="keyword">not</span> cap.isOpened():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;无法打开视频文件: <span class="subst">&#123;video_path&#125;</span>&quot;</span>)</span><br><span class="line">    exit()</span><br><span class="line"></span><br><span class="line">best_match_score = -<span class="number">1</span></span><br><span class="line">best_match_frame = <span class="literal">None</span></span><br><span class="line">best_match_text = <span class="string">&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">frame_count = <span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    ret, frame = cap.read()</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> ret:</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line"></span><br><span class="line">    frame_count += <span class="number">1</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;Processing frame <span class="subst">&#123;frame_count&#125;</span>...&quot;</span>)</span><br><span class="line"></span><br><span class="line">    frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)</span><br><span class="line">    pil_image = Image.fromarray(frame_rgb)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        inputs = processor(</span><br><span class="line">            text=texts,</span><br><span class="line">            images=[pil_image],</span><br><span class="line">            return_tensors=<span class="string">&quot;pt&quot;</span>,</span><br><span class="line">            padding=<span class="literal">True</span></span><br><span class="line">        ).to(device)</span><br><span class="line">    <span class="keyword">except</span> RuntimeError <span class="keyword">as</span> e:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;预处理失败: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        <span class="keyword">try</span>:</span><br><span class="line">            outputs = model(**inputs)</span><br><span class="line">        <span class="keyword">except</span> RuntimeError <span class="keyword">as</span> e:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">f&quot;推理错误: <span class="subst">&#123;e&#125;</span>&quot;</span>)</span><br><span class="line">            <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line">    logits_per_image = outputs.logits_per_image.cuda().numpy()</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(texts) == <span class="number">1</span>:</span><br><span class="line">        current_match_score = logits_per_image[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        probs = np.exp(logits_per_image) / np.<span class="built_in">sum</span>(np.exp(logits_per_image), axis=<span class="number">1</span>, keepdims=<span class="literal">True</span>)</span><br><span class="line">        current_match_score = probs[<span class="number">0</span>][<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    current_match_text = texts[<span class="number">0</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> current_match_score &gt; best_match_score:</span><br><span class="line">        best_match_score = current_match_score</span><br><span class="line">        best_match_frame = frame</span><br><span class="line">        best_match_text = current_match_text</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;更新最佳匹配: &#x27;<span class="subst">&#123;best_match_text&#125;</span>&#x27; (分数: <span class="subst">&#123;best_match_score:<span class="number">.4</span>f&#125;</span>)&quot;</span>)</span><br><span class="line"></span><br><span class="line">cap.release()</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> best_match_frame <span class="keyword">is</span> <span class="keyword">not</span> <span class="literal">None</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">f&quot;\n最佳匹配描述: &#x27;<span class="subst">&#123;best_match_text&#125;</span>&#x27; (分数: <span class="subst">&#123;best_match_score:<span class="number">.4</span>f&#125;</span>)&quot;</span>)</span><br><span class="line">    cv2.imshow(<span class="string">&quot;Best Matching Frame&quot;</span>, best_match_frame)</span><br><span class="line">    cv2.waitKey(<span class="number">0</span>)</span><br><span class="line">    cv2.destroyAllWindows()</span><br><span class="line"></span><br><span class="line">    save_frame = <span class="built_in">input</span>(<span class="string">&quot;是否保存最佳匹配帧？(y/n): &quot;</span>).strip().lower()</span><br><span class="line">    <span class="keyword">if</span> save_frame == <span class="string">&#x27;y&#x27;</span>:</span><br><span class="line">        cv2.imwrite(output_frame_path, best_match_frame)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;最佳匹配帧已保存到: <span class="subst">&#123;output_frame_path&#125;</span>&quot;</span>)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;未找到匹配的帧。&quot;</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="使用说明"><a href="#使用说明" class="headerlink" title="使用说明"></a>使用说明</h2><p><strong>环境要求：</strong></p>
+<ul>
+<li>请安装Python 3.8+</li>
+<li>安装依赖库：<code>torch</code>, <code>transformers</code>,<code>opencv-python</code>,<code>pillow</code></li>
+<li>如希望利用显卡进行加速计算，请安装CUDA和CUDNN</li>
+</ul>
+<p><strong>准备步骤：</strong></p>
+<ul>
+<li>下载CLIP模型文件至本地目录</li>
+<li>准备一个您要处理的视频，并确保视频文件路径不包含中文</li>
+<li>准备一个保存最佳匹配帧的路径</li>
+</ul>
+<h2 id="输出结果示例"><a href="#输出结果示例" class="headerlink" title="输出结果示例"></a>输出结果示例</h2><p>笔者以本人所在学院的宣传片为例，其中有一段是游泳的片段，笔者尝试利用该程序找到游泳的片段。</p>
+<p>首先按照要求输入CLIP模型的地址、视频地址和导出图片的地址，然后系统开始运行。<br><img src="/images/image-4.png" alt="alt text"></p>
+<p>等到处理至游泳片段后，匹配分数不断刷新。<br><img src="/images/image-5.png" alt="alt text"></p>
+<p>程序运行完毕，最匹配的那一帧会自动弹出。<br><img src="/images/image-6.png" alt="alt text"><br><img src="/images/image-7.png" alt="alt text"></p>
+<p>键盘输入<code>y</code>之后，图片自动保存在设置的路径中。<br><img src="/images/image-8.png" alt="alt text"></p>
+<h2 id="技术优势"><a href="#技术优势" class="headerlink" title="技术优势"></a>技术优势</h2><ul>
+<li><strong>多模态对齐</strong>：CLIP模型通过对比学习实现了文本和图像在语义空间的对齐。</li>
+<li><strong>高效计算</strong>：利用GPU加速，实时处理视频帧并计算匹配分数。</li>
+<li><strong>语义理解</strong>：能够捕捉复杂的语义关系，而不仅仅是简单的关键词匹配。</li>
+</ul>
+<h2 id="备注"><a href="#备注" class="headerlink" title="备注"></a>备注</h2><p>本项目是笔者在学习了一点大模型技术后，利用不到半天时间开发的小型应用。这只是使用多模态大模型的一个小练习，且市场上已经有一些不错的产品实现了本项目的功能（如百度网盘自带的“云一朵”助理）。</p>
+<p>这篇文档会先在笔者的个人博客上发布，稍后会整理并发布在<a target="_blank" rel="noopener" href="https://github.com/Dasai-Hzm">我的Github</a>上，欢迎读者在Github社区提交issue讨论改进方案。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://dasai-hzm.github.io/2025/02/08/ComputerFoundation/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.png">
+      <meta itemprop="name" content="HzmSailor">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HzmSailor's Learning Blog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2025/02/08/ComputerFoundation/" class="post-title-link" itemprop="url">人工智能科学研究的工具基础</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2025-02-08 20:03:16" itemprop="dateCreated datePublished" datetime="2025-02-08T20:03:16+08:00">2025-02-08</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2025-07-23 12:53:02" itemprop="dateModified" datetime="2025-07-23T12:53:02+08:00">2025-07-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>AI 领域的科研近几年呈现井喷式的增长，相比于理科/传统工科，AI 领域的科研不需要太多太深的基础知识，且不需要庞大的 Team 就能做出些成果。经常有朋友问我科研入门都需要掌握哪些知识，正逢近日师兄希望完善一下培养新人的 doc，我也打算另开一篇 blog 记录下做研究需要补充的基础知识。</p>
+<p>总的来说，做 AI Research 大约需要的基础有这些：数学基础，AI基础，编程基础，工具基础，英语基础。本文的重点是工具基础这部分。顺带说一下其他部分：</p>
+<p><strong>数学基础</strong>：<strong>高数、概率论、CSAI</strong>。因方向而异，除去理论机器学习、大模型机理等理论性较强的方向，需要的基础其实并不多，能看懂 paper 中的公式推导即可，比如 VAE, Diffusion 原始 paper 中的推导。另外，一些其他的数学知识也是必要的，比如 PAC/SVD/插值法等等，这就体现出 <strong>CSAI</strong> 这门课的作用了。至于复变，除了傅里叶变换在传统的信号处理中常用之外，其他的貌似没有什么太大作用（当然可能是笔者水平不够，所看的 paper 没有用过这些）。</p>
+<p><strong>AI基础</strong>：<strong>深度学习+方向相关的基础知识</strong>。深度学习可以参考 CS231N 这门课（＋作业）。著名的喵喵学长多次讲过，传统的机器学习算法似乎对科研帮助并不大，这点我还是很赞同的，因此不必按照课程设置把机器学习、AI概论等等课学完再去学 Deep Learning，直接学 DL 完全没有问题，有问题请教 AI 即可。此外，根据研究方向的不同，所需的基础知识也有差异，比如 Robot Learning 就需要额外学一些 Robotics 和 3D Vision 的基础知识。</p>
+<p><strong>编程基础</strong>：<strong>Python, Pytorch</strong>。Python 编程和 Pytorch 的使用同样重要，这部分内容可以搜一些现有的教程，如李沐在B站上的视频，等等。完成标准是可以手写一个 Transformer 之类的较大的 Project (或者手动实现一下 nn.MultiheadAttention)。算法知识其实并不太必要（笔者算法水平很菜呜），重要的是能看明白程序是怎么运行的，参数是怎么调用的，当我需要修改某个模块的时候代码应该怎么改（这才是最实用的技能）。另外，学会和 Cursor/Copilot 一起工作也很重要，特别是发现他们的错误。</p>
+<p><strong>英语基础</strong>：<strong>不能太差就行</strong>，比如六级 550+ 这样。一开始看 paper 肯定是看不太懂的，于是查词典，看了几篇之后专业词汇都懂了之后便能做到独立看 paper, 且阅读速度并不会比中文慢多少。</p>
+<p>下面进入正题，详细介绍一下工具基础。</p>
+<h2 id="Linux-服务器"><a href="#Linux-服务器" class="headerlink" title="Linux 服务器"></a>Linux 服务器</h2><p>大部分的深度学习训练应该是在课题组的服务器/租用的服务器上完成的，因此需要掌握如何使用组内的服务器。</p>
+<p>首先，服务器可以理解为是操作系统为 Linux 且性能极强（无论是GPU 还是 CPU）的一台电脑。所以需要先学习一下 Linux 系统的基本知识。Linux 系统的内容十分丰富，笔者只列与 AI Rsearch 密切相关的几点。</p>
+<h3 id="1-文件系统"><a href="#1-文件系统" class="headerlink" title="1. 文件系统"></a>1. 文件系统</h3><ul>
+<li><p><strong>文件复制</strong>  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> /home/nailong/jitui.txt /home/baobaolong/</span><br></pre></td></tr></table></figure>
+<p>  表示将 jitui.txt 文件复制到 /home/baobaolong/ 目录下。复制整个文件夹需加 -r 参数：</p>
+  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cp</span> -r /home/nailong/project /home/baobaolong/</span><br></pre></td></tr></table></figure></li>
+<li><strong>文件移动（剪切）</strong>  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mv</span> jitui.txt /home/baobaolong/</span><br><span class="line"><span class="built_in">mv</span> old_name.txt new_name.txt  <span class="comment"># 也可以用于重命名</span></span><br></pre></td></tr></table></figure></li>
+<li><strong>文件删除</strong>  <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 删除单个文件：</span></span><br><span class="line"><span class="built_in">rm</span> jitui.txt</span><br><span class="line"><span class="comment"># 删除文件夹及其所有内容：</span></span><br><span class="line"><span class="built_in">rm</span> -r folder_name/</span><br><span class="line"><span class="comment"># 强制删除（不提示）：</span></span><br><span class="line"><span class="built_in">rm</span> -rf folder_name/</span><br></pre></td></tr></table></figure>
+  警告：<code>rm -rf</code> 命令非常危险，误用可能导致系统崩溃，务必小心。</li>
+</ul>
+<h3 id="2-权限管理与运行程序"><a href="#2-权限管理与运行程序" class="headerlink" title="2. 权限管理与运行程序"></a>2. 权限管理与运行程序</h3><h3 id="3-视监你的机器：nvidia-smi-和-htop"><a href="#3-视监你的机器：nvidia-smi-和-htop" class="headerlink" title="3. 视监你的机器：nvidia-smi 和 htop"></a>3. 视监你的机器：nvidia-smi 和 htop</h3><h4 id="nvidia-smi-和-watch-n-0-1-nvidia-smi"><a href="#nvidia-smi-和-watch-n-0-1-nvidia-smi" class="headerlink" title="nvidia-smi 和 watch -n 0.1 nvidia-smi"></a>nvidia-smi 和 watch -n 0.1 nvidia-smi</h4><p>这个命令用来查看模型训练的 GPU 使用情况，如果希望动态查看，可以使用 <code>watch -n 0.1 nvidia-smi</code> （0.1 是我设置的刷新时间间隔）。这里以笔者的输出举例，分析怎么看这里面的数据。<br><img src="ccfbfb565994eb1a146b21ff58dd04d.png" alt="alt text"></p>
+<p>左边表示从 0 到 7 是 8 张 NVIDIA 4090 显卡，说明这是一台八卡 4090 服务器。</p>
+<p>最左边是风扇和温度，反映了这张卡近一段时间的工作强度，中间是目前的显存占用，右边是目前的 GPU 利用率。一般而言，良好的训练状态下 GPU 利用率应该在 70% 以上波动，最好能一直 80% 以上。如果 GPU 利用率不高（经常三四十，甚至 0% ）则要考虑是不是数据预处理太慢，CPU 和 GPU 速度不同步导致 GPU 空闲，这时可以试图增加数据预处理模块，或者提高 num_workers 到 8 或者 16，都可能解决这个问题。</p>
+<p>显存的占用和 batch_size 与模型的大小都有关，一般而言，在模型大小固定的情况下，根据显卡的显存总量，尽量提高 batch_size 有助于稳定训练和提高效果。</p>
+<h4 id="htop-和-top"><a href="#htop-和-top" class="headerlink" title="htop 和 top"></a>htop 和 top</h4><p>这两个命令是监控 CPU 状态的，区别是 htop 比较新，top 是个很老的命令了。<br><img src="image-1.png" alt="alt text"><br>同样以一台服务器为例（摄像时机器正处空闲时段，没有跑什么训练或测试任务）展示 htop 的输出，通过这个输出，我们很方便判断系统此时的负载，有没有哪个线程卡死之类的问题。比如发现训练缓慢，可以通过查询 STATE 判断是否有卡 I/O 的情况。具体的细节，<strong>一位台湾的工程师写过 <a target="_blank" rel="noopener" href="https://medium.com/starbugs/do-you-understand-htop-ffb72b3d5629">blog</a> 详细讲解怎么看 htop 面板，很实用。</strong></p>
+<p>bash<br>复制<br>编辑<br>ls -l<br>输出示例：</p>
+<p>csharp<br>复制<br>编辑<br>-rw-r—r— 1 user group 1234 Jul 22 12:00 jitui.txt<br>修改权限</p>
+<p>bash<br>复制<br>编辑<br>chmod +x script.sh  # 增加执行权限<br>运行程序</p>
+<p>运行 Python 脚本：</p>
+<p>bash<br>复制<br>编辑<br>python script.py<br>运行 Shell 脚本（先确保可执行）：</p>
+<p>bash<br>复制<br>编辑<br>chmod +x run.sh<br>./run.sh</p>
+<ol>
+<li>包管理与环境配置（基础）<br>使用 pip 安装库</li>
+</ol>
+<p>bash<br>复制<br>编辑<br>pip install numpy<br>使用 conda 创建虚拟环境</p>
+<p>bash<br>复制<br>编辑<br>conda create -n myenv python=3.10<br>conda activate myenv<br>查看当前已安装的包</p>
+<p>bash<br>复制<br>编辑<br>pip list</p>
+<ol>
+<li>GPU 与进程管理（简要）<br>查看 GPU 使用情况（NVIDIA 显卡）</li>
+</ol>
+<p>bash<br>复制<br>编辑<br>nvidia-smi<br>查看进程状态</p>
+<p>bash<br>复制<br>编辑<br>top<br>推荐工具：htop</p>
+<p>bash<br>复制<br>编辑<br>sudo apt install htop<br>htop<br>杀死进程</p>
+<p>bash<br>复制<br>编辑<br>kill <PID><br>kill -9 <PID>  # 强制杀死</p>
+<ol>
+<li>远程连接与文件传输<br>通过 SSH 连接远程服务器</li>
+</ol>
+<p>bash<br>复制<br>编辑<br>ssh username@server_ip<br>从本地复制文件到服务器</p>
+<p>bash<br>复制<br>编辑<br>scp localfile.txt username@server_ip:/home/username/<br>从服务器复制文件到本地</p>
+<p>bash<br>复制<br>编辑<br>scp username@server_ip:/home/username/file.txt .<br>如需继续阅读 Git 基础、Shell 脚本、远程开发 VSCode 配置、Docker 使用等内容，请阅读下一节。</p>
+<p>go<br>复制<br>编辑</p>
+<p>如你需要我输出为 <code>.md</code> 文件或继续补充后续章节（如 Git、Docker、调试工具等），可以随时告诉我。</p>
+<p>需要注意的两点：组内服务器常为共用，一般需建一个以自己名字命名的文件夹存储自己的代码。并且更为重要的是，服务器通常将代码和数据分开存储，数据存储在数据盘以加快读写速度，必须把自己训练的数据放在数据盘（否则可能导致系统盘爆满影响他人使用，笔者一开始不知道就放错了哈哈）。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
       
   
   
@@ -631,7 +871,7 @@ MathJax = {
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -644,7 +884,7 @@ MathJax = {
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -661,9 +901,15 @@ MathJax = {
 
   <div class="links-of-blogroll motion-element">
     <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
-      Links
+      导航
     </div>
     <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="/about/%20%7C%7C%20fa%20fa-user" title="&#x2F;about&#x2F; || fa fa-user">关于</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="/resources/%20%7C%7C%20fa%20fa-download" title="&#x2F;resources&#x2F; || fa fa-download">资源</a>
+        </li>
         <li class="links-of-blogroll-item">
           <a href="http://xjtu-ai.github.io/" title="http:&#x2F;&#x2F;xjtu-ai.github.io" rel="noopener" target="_blank">XJTU-AI学组</a>
         </li>

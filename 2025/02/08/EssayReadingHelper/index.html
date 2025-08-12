@@ -29,7 +29,7 @@ MathJax = {
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"dasai-hzm.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"dasai-hzm.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="项目背景在实际的科研场景中，我们常常需要阅读大量的文献，这其中有一个文献的筛选过程：我们希望快速地知道这篇文章讲了哪些内容，从而判断这篇文章与自己的方向是否契合，决定是否要精读。虽然，阅读文章的摘要就能做到这一点，但是摘要有时不能覆盖全文每一个部分的主题，提供的信息可能不足，而且纯英文的摘要对于刚刚入门该领域的科研人员并不友好。 笔者基于阿里通义大模型 (qwen-turbo-2024-11-01">
@@ -136,11 +136,6 @@ MathJax = {
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
-        <li class="menu-item menu-item-about">
-
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
-
-  </li>
         <li class="menu-item menu-item-tags">
 
     <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
@@ -154,11 +149,6 @@ MathJax = {
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
-
-  </li>
-        <li class="menu-item menu-item-sitemap">
-
-    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
 
   </li>
   </ul>
@@ -296,8 +286,8 @@ MathJax = {
       <i class="fa fa-chevron-left"></i> 大一上学期总结
     </a></div>
       <div class="post-nav-item">
-    <a href="/2025/02/09/CLIPBasedAudioProcessingSystem/" rel="next" title="一种基于CLIP模型的智能视频帧匹配系统">
-      一种基于CLIP模型的智能视频帧匹配系统 <i class="fa fa-chevron-right"></i>
+    <a href="/2025/02/08/ComputerFoundation/" rel="next" title="人工智能科学研究的工具基础">
+      人工智能科学研究的工具基础 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -373,7 +363,7 @@ MathJax = {
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -386,7 +376,7 @@ MathJax = {
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -403,9 +393,15 @@ MathJax = {
 
   <div class="links-of-blogroll motion-element">
     <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
-      Links
+      导航
     </div>
     <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="/about/%20%7C%7C%20fa%20fa-user" title="&#x2F;about&#x2F; || fa fa-user">关于</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="/resources/%20%7C%7C%20fa%20fa-download" title="&#x2F;resources&#x2F; || fa fa-download">资源</a>
+        </li>
         <li class="links-of-blogroll-item">
           <a href="http://xjtu-ai.github.io/" title="http:&#x2F;&#x2F;xjtu-ai.github.io" rel="noopener" target="_blank">XJTU-AI学组</a>
         </li>

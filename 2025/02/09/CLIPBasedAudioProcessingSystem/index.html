@@ -29,7 +29,7 @@ MathJax = {
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"dasai-hzm.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+    var CONFIG = {"hostname":"dasai-hzm.github.io","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"always","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
   <meta name="description" content="项目背景在视频内容分析领域，我们常常需要从长视频中快速定位特定场景或画面。传统方法依赖于人工逐帧查看或基于元数据的简单搜索，效率低下且无法应对复杂语义查询。CLIP（Contrastive Language-Image Pretraining）模型的出现为这一领域带来了新的可能性，它能够理解图像与文本之间的语义关联。 笔者基于HuggingFace的CLIP模型开发了智能视频帧匹配系统，该系统可实">
@@ -140,11 +140,6 @@ MathJax = {
     <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
 
   </li>
-        <li class="menu-item menu-item-about">
-
-    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
-
-  </li>
         <li class="menu-item menu-item-tags">
 
     <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
@@ -158,11 +153,6 @@ MathJax = {
         <li class="menu-item menu-item-archives">
 
     <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
-
-  </li>
-        <li class="menu-item menu-item-sitemap">
-
-    <a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a>
 
   </li>
   </ul>
@@ -319,8 +309,8 @@ MathJax = {
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2025/02/08/EssayReadingHelper/" rel="prev" title="一种基于大模型的自动化批量文献概要生成系统">
-      <i class="fa fa-chevron-left"></i> 一种基于大模型的自动化批量文献概要生成系统
+    <a href="/2025/02/08/ComputerFoundation/" rel="prev" title="人工智能科学研究的工具基础">
+      <i class="fa fa-chevron-left"></i> 人工智能科学研究的工具基础
     </a></div>
       <div class="post-nav-item">
     <a href="/2025/02/22/RL-1/" rel="next" title="Reinforcement Learning-1: Basic Concepts">
@@ -400,7 +390,7 @@ MathJax = {
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-count">16</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -413,7 +403,7 @@ MathJax = {
       <div class="site-state-item site-state-tags">
             <a href="/tags/">
           
-        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -430,9 +420,15 @@ MathJax = {
 
   <div class="links-of-blogroll motion-element">
     <div class="links-of-blogroll-title"><i class="fa fa-link fa-fw"></i>
-      Links
+      导航
     </div>
     <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="/about/%20%7C%7C%20fa%20fa-user" title="&#x2F;about&#x2F; || fa fa-user">关于</a>
+        </li>
+        <li class="links-of-blogroll-item">
+          <a href="/resources/%20%7C%7C%20fa%20fa-download" title="&#x2F;resources&#x2F; || fa fa-download">资源</a>
+        </li>
         <li class="links-of-blogroll-item">
           <a href="http://xjtu-ai.github.io/" title="http:&#x2F;&#x2F;xjtu-ai.github.io" rel="noopener" target="_blank">XJTU-AI学组</a>
         </li>
